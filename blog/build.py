@@ -112,7 +112,7 @@ def read_posts():
 
 def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=None):
     rtl = ' dir="rtl"' if lang == "he" else ' dir="ltr"'
-    og_img = f"{SITE}/{image}" if image else f"{SITE}/assets/og.png"
+    og_img = f"{SITE}/{image}" if image else f"{SITE}/assets/og.jpg"
     u = UI[lang]
     switch_html = (
         f'\n      <a class="langtoggle" href="{switch}" '
@@ -160,7 +160,7 @@ def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=No
 <link rel="icon" type="image/png" href="../assets/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 </head>
 <body class="subpage">
@@ -169,7 +169,7 @@ def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=No
 <header class="nav scrolled" id="nav">
   <div class="container nav__inner">
     <a href="{home}" class="brand" aria-label="D Consulting home">
-      <img class="brand__logo brand__logo--light" src="../assets/logo-light.png" alt="D Consulting" width="1808" height="544">
+      <img class="brand__logo brand__logo--light" src="../assets/logo-light.png" alt="D Consulting" width="465" height="140">
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
       {nav_links}
@@ -192,7 +192,7 @@ def foot(lang):
     return f"""<footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
-      <img class="footer__logo" src="../assets/logo-dark.png" alt="D Consulting" width="1808" height="544" loading="lazy">
+      <img class="footer__logo" src="../assets/logo-dark.png" alt="D Consulting" width="465" height="140" loading="lazy">
       <p class="footer__tag">Developing innovative strategies &middot; Achieving success</p>
     </div>
     <nav class="footer__links" aria-label="Footer">
@@ -245,7 +245,7 @@ def build_article(p, alts=None):
         "datePublished": p["date"],
         "dateModified": p["date"],
         "inLanguage": p["lang"],
-        "image": [f"{SITE}/{p['image']}" if p["image"] else f"{SITE}/assets/og.png"],
+        "image": [f"{SITE}/{p['image']}" if p["image"] else f"{SITE}/assets/og.jpg"],
         "keywords": ", ".join(p["tags"]),
         "articleSection": p["tags"][0] if p["tags"] else "Hospitality",
         "wordCount": p["words"],
