@@ -119,6 +119,24 @@ def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=No
         f'aria-label="Switch language">{html.escape(u["other"])}</a>'
         if switch else ""
     )
+    # keep the visitor's language when they head back to the main site
+    home = "../index.html?lang=he" if lang == "he" else "../index.html"
+
+    def _nl(href, key, cls=""):
+        c = f' class="{cls}"' if cls else ""
+        return (f'<a href="{href}"{c} data-en="{html.escape(UI["en"][key])}"'
+                f' data-he="{html.escape(UI["he"][key])}">{html.escape(u[key])}</a>')
+
+    nav_links = "\n      ".join([
+        _nl(f"{home}#about", "n_about"),
+        _nl(f"{home}#services", "n_services"),
+        _nl(f"{home}#platform", "n_platform"),
+        _nl(f"{home}#approach", "n_approach"),
+        _nl("index.html", "n_insights", "active"),
+        _nl(f"{home}#contact", "n_contact"),
+    ])
+    cta = _nl(f"{home}#contact", "n_cta", "btn btn--sm btn--primary")
+
     hreflang = "".join(
         f'\n<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in (alts or [])
     )
@@ -150,19 +168,14 @@ def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=No
 <!-- full site nav, so the reader never feels they have left the site -->
 <header class="nav scrolled" id="nav">
   <div class="container nav__inner">
-    <a href="../index.html" class="brand" aria-label="D Consulting home">
+    <a href="{home}" class="brand" aria-label="D Consulting home">
       <img class="brand__logo brand__logo--light" src="../assets/logo-light.png" alt="D Consulting" width="1808" height="544">
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
-      <a href="../index.html#about">{html.escape(u['n_about'])}</a>
-      <a href="../index.html#services">{html.escape(u['n_services'])}</a>
-      <a href="../index.html#platform">{html.escape(u['n_platform'])}</a>
-      <a href="../index.html#approach">{html.escape(u['n_approach'])}</a>
-      <a href="index.html" class="active">{html.escape(u['n_insights'])}</a>
-      <a href="../index.html#contact">{html.escape(u['n_contact'])}</a>
+      {nav_links}
     </nav>
     <div class="nav__actions">{switch_html}
-      <a href="../index.html#contact" class="btn btn--sm btn--primary">{html.escape(u['n_cta'])}</a>
+      {cta}
       <button class="hamburger" id="hamburger" type="button" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -170,7 +183,7 @@ def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=No
   </div>
 </header>
 
-<p class="crumbs"><a href="../index.html">D Consulting</a> <span>/</span> <a href="index.html">{html.escape(u['n_insights'])}</a></p>
+<p class="crumbs"><a href="{home}">D Consulting</a> <span>/</span> <a href="index.html" data-en="{html.escape(UI['en']['n_insights'])}" data-he="{html.escape(UI['he']['n_insights'])}">{html.escape(u['n_insights'])}</a></p>
 """
 
 
@@ -340,14 +353,34 @@ def build_index(posts):
   var saved='en'; try{{saved=localStorage.getItem('dc_lang')||'en';}}catch(e){{}}
   var qp=new URLSearchParams(location.search).get('lang'); if(qp==='he'||qp==='en') saved=qp;
   function apply(l){{
-    document.documentElement.setAttribute('lang',l);
-    document.documentElement.setAttribute('dir', l==='he'?'rtl':'ltr');
-    [].forEach.call(document.querySelectorAll('.bloglang'),function(s){{
-      s.hidden = (s.getAttribute('data-lang')!==l);
+    var he = (l === 'he');
+    document.documentElement.setAttribute('lang', l);
+    document.documentElement.setAttribute('dir', he ? 'rtl' : 'ltr');
+    [].forEach.call(document.querySelectorAll('.bloglang'), function (s) {{
+      s.hidden = (s.getAttribute('data-lang') !== l);
     }});
-    try{{localStorage.setItem('dc_lang',l);}}catch(e){{}}
+    /* nav + breadcrumb labels */
+    [].forEach.call(document.querySelectorAll('[data-en][data-he]'), function (a) {{
+      var t = a.getAttribute(he ? 'data-he' : 'data-en');
+      if (t) a.textContent = t;
+    }});
+    /* keep the language when heading back to the main site */
+    [].forEach.call(document.querySelectorAll('a[href*="index.html"]'), function (a) {{
+      var h = a.getAttribute('href');
+      if (h.indexOf('../index.html') !== 0) return;
+      var parts = h.split('#');
+      a.setAttribute('href', '../index.html' + (he ? '?lang=he' : '') + (parts[1] ? '#' + parts[1] : ''));
+    }});
+    var sw = document.querySelector('.langtoggle');
+    if (sw) sw.textContent = he ? 'English' : 'עברית';
+    try {{ localStorage.setItem('dc_lang', l); }} catch (e) {{}}
   }}
   apply(saved);
+  var sw = document.querySelector('.langtoggle');
+  if (sw) sw.addEventListener('click', function (e) {{
+    e.preventDefault();
+    apply(document.documentElement.getAttribute('lang') === 'he' ? 'en' : 'he');
+  }});
 }})();
 </script>
 """

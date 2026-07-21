@@ -31,16 +31,16 @@
       <img class="brand__logo brand__logo--light" src="../assets/logo-light.png" alt="D Consulting" width="1808" height="544">
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
-      <a href="../index.html#about">About</a>
-      <a href="../index.html#services">Services</a>
-      <a href="../index.html#platform">Platform</a>
-      <a href="../index.html#approach">Approach</a>
-      <a href="index.html" class="active">Insights</a>
-      <a href="../index.html#contact">Contact</a>
+      <a href="../index.html#about" data-en="About" data-he="אודות">About</a>
+      <a href="../index.html#services" data-en="Services" data-he="שירותים">Services</a>
+      <a href="../index.html#platform" data-en="Platform" data-he="הפלטפורמה">Platform</a>
+      <a href="../index.html#approach" data-en="Approach" data-he="הגישה">Approach</a>
+      <a href="index.html" class="active" data-en="Insights" data-he="תובנות">Insights</a>
+      <a href="../index.html#contact" data-en="Contact" data-he="צור קשר">Contact</a>
     </nav>
     <div class="nav__actions">
       <a class="langtoggle" href="?lang=he" aria-label="Switch language">עברית</a>
-      <a href="../index.html#contact" class="btn btn--sm btn--primary">Let&#x27;s talk</a>
+      <a href="../index.html#contact" class="btn btn--sm btn--primary" data-en="Let&#x27;s talk" data-he="דברו איתנו">Let&#x27;s talk</a>
       <button class="hamburger" id="hamburger" type="button" aria-label="Menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -48,7 +48,7 @@
   </div>
 </header>
 
-<p class="crumbs"><a href="../index.html">D Consulting</a> <span>/</span> <a href="index.html">Insights</a></p>
+<p class="crumbs"><a href="../index.html">D Consulting</a> <span>/</span> <a href="index.html" data-en="Insights" data-he="תובנות">Insights</a></p>
 <main class="section">
   <div class="container">
   <section class="bloglang" data-lang="en">
@@ -98,14 +98,34 @@
   var saved='en'; try{saved=localStorage.getItem('dc_lang')||'en';}catch(e){}
   var qp=new URLSearchParams(location.search).get('lang'); if(qp==='he'||qp==='en') saved=qp;
   function apply(l){
-    document.documentElement.setAttribute('lang',l);
-    document.documentElement.setAttribute('dir', l==='he'?'rtl':'ltr');
-    [].forEach.call(document.querySelectorAll('.bloglang'),function(s){
-      s.hidden = (s.getAttribute('data-lang')!==l);
+    var he = (l === 'he');
+    document.documentElement.setAttribute('lang', l);
+    document.documentElement.setAttribute('dir', he ? 'rtl' : 'ltr');
+    [].forEach.call(document.querySelectorAll('.bloglang'), function (s) {
+      s.hidden = (s.getAttribute('data-lang') !== l);
     });
-    try{localStorage.setItem('dc_lang',l);}catch(e){}
+    /* nav + breadcrumb labels */
+    [].forEach.call(document.querySelectorAll('[data-en][data-he]'), function (a) {
+      var t = a.getAttribute(he ? 'data-he' : 'data-en');
+      if (t) a.textContent = t;
+    });
+    /* keep the language when heading back to the main site */
+    [].forEach.call(document.querySelectorAll('a[href*="index.html"]'), function (a) {
+      var h = a.getAttribute('href');
+      if (h.indexOf('../index.html') !== 0) return;
+      var parts = h.split('#');
+      a.setAttribute('href', '../index.html' + (he ? '?lang=he' : '') + (parts[1] ? '#' + parts[1] : ''));
+    });
+    var sw = document.querySelector('.langtoggle');
+    if (sw) sw.textContent = he ? 'English' : 'עברית';
+    try { localStorage.setItem('dc_lang', l); } catch (e) {}
   }
   apply(saved);
+  var sw = document.querySelector('.langtoggle');
+  if (sw) sw.addEventListener('click', function (e) {
+    e.preventDefault();
+    apply(document.documentElement.getAttribute('lang') === 'he' ? 'en' : 'he');
+  });
 })();
 </script>
 <script type="application/ld+json">

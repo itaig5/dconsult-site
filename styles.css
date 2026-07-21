@@ -414,8 +414,16 @@ html[dir="rtl"] .chart span{animation:none}
 @media (max-width:760px){
   body{font-size:16px}
   .nav__links{position:fixed;inset-block-start:0;inset-inline-end:0;height:100vh;width:min(80vw,320px);background:var(--ink-900);flex-direction:column;justify-content:center;gap:8px;padding:40px;transform:translateX(100%);transition:transform .35s var(--ease);box-shadow:-20px 0 60px rgba(0,0,0,.4)}
-  html[dir="rtl"] .nav__links{inset-inline-end:auto;inset-inline-start:0;transform:translateX(-100%)}
-  .nav__links.open{transform:translateX(0)}
+  /* inset-inline-end already flips with dir — only the transform is physical,
+     so flip that alone. And .open must out-specify the [dir] rule or it can
+     never re-open/close in RTL. */
+  html[dir="rtl"] .nav__links{transform:translateX(-100%);box-shadow:20px 0 60px rgba(0,0,0,.4)}
+  .nav__links.open,
+  html[dir="rtl"] .nav__links.open{transform:translateX(0)}
+  /* the sliding panel is fixed (so it paints above static siblings) and would
+     cover the hamburger — keep the controls on top so the menu can be closed */
+  .nav__links{z-index:1}
+  .nav__actions{position:relative;z-index:2}
   .nav__links a{color:#fff!important;font-size:20px;padding:10px 0}
   .nav__links a::after{display:none}
   .hamburger{display:flex}
