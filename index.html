@@ -15,8 +15,18 @@
 <meta property="og:image" content="https://dconsult.me/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<!-- Favicon (inline SVG) -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E1B30'/%3E%3Ctext x='50%25' y='52%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-weight='700' font-size='40' fill='%23ffffff'%3ED%3C/text%3E%3Ccircle cx='47' cy='20' r='5' fill='%23D7B254'/%3E%3C/svg%3E">
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="assets/icon-512.png">
+<link rel="apple-touch-icon" href="assets/icon-512.png">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7FGVV9022J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7FGVV9022J');
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,13 +39,14 @@
 <header class="nav" id="nav">
   <div class="container nav__inner">
     <a href="#top" class="brand" aria-label="D Consulting home">
-      <span class="brand__mark">D&nbsp;<span class="gold">C</span>ONSULTING</span>
+      <img class="brand__logo brand__logo--dark" src="assets/logo-dark.png" alt="D Consulting" width="1808" height="544">
+      <img class="brand__logo brand__logo--light" src="assets/logo-light.png" alt="" aria-hidden="true" width="1808" height="544">
     </a>
     <nav class="nav__links" id="navLinks" aria-label="Primary">
       <a href="#about" data-i18n="nav.about">About</a>
       <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#platform" data-i18n="nav.platform">Platform</a>
       <a href="#approach" data-i18n="nav.approach">Approach</a>
-      <a href="#results" data-i18n="nav.results">Results</a>
       <a href="#contact" data-i18n="nav.contact">Contact</a>
     </nav>
     <div class="nav__actions">
@@ -73,7 +84,7 @@
         <ul class="hero__stats">
           <li><strong>+25%</strong><span data-i18n="hero.stat1">average revenue growth</span></li>
           <li><strong>360°</strong><span data-i18n="hero.stat2">digital solution</span></li>
-          <li><strong data-i18n="hero.stat3num">Israel & Europe</strong><span data-i18n="hero.stat3">properties served</span></li>
+          <li><strong data-i18n="hero.stat3num">4 regions</strong><span data-i18n="hero.stat3">US · Europe · Middle East · Asia</span></li>
         </ul>
       </div>
       <div class="hero__visual" aria-hidden="true">
@@ -96,6 +107,23 @@
     </div>
   </section>
 
+  <!-- ============ CLIENT STRIP ============ -->
+  <section class="logos" aria-label="Selected clients">
+    <div class="container">
+      <p class="logos__label" data-i18n="logos.clients">Trusted by hotels &amp; accommodation groups</p>
+      <div class="logos__strip">
+        <a href="https://www.stay-master.com/" target="_blank" rel="noopener"><span class="logos__name">Stay Master</span></a>
+        <a href="https://www.parealife.com/" target="_blank" rel="noopener"><span class="logos__name">Parea Life</span></a>
+        <a href="https://h7tlv.co.il/" target="_blank" rel="noopener"><span class="logos__name">H7 Tel Aviv</span></a>
+        <a href="https://scarlet-hotel.com/" target="_blank" rel="noopener"><span class="logos__name">Scarlet Hotel</span></a>
+        <a href="https://www.satori.life/" target="_blank" rel="noopener"><span class="logos__name">Satori</span></a>
+        <a href="https://www.elissohotel.com/" target="_blank" rel="noopener"><span class="logos__name">Elisso Hotel</span></a>
+        <a href="https://shellhousetlv.com/en/" target="_blank" rel="noopener"><span class="logos__name">Shell House</span></a>
+        <a href="https://hayarkon70.com/" target="_blank" rel="noopener"><span class="logos__name">Hayarkon 70</span></a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ ABOUT ============ -->
   <section class="section" id="about">
     <div class="container about">
@@ -112,7 +140,7 @@
         </div>
         <aside class="about__aside">
           <div class="founder">
-            <div class="founder__avatar" aria-hidden="true">IG</div>
+            <img class="founder__photo" src="assets/itai.jpg" alt="Itai Gal" width="416" height="416" loading="lazy">
             <div>
               <div class="founder__name">Itai Gal</div>
               <div class="founder__role" data-i18n="about.founderRole">Founder &amp; CEO</div>
@@ -184,6 +212,133 @@
     </div>
   </section>
 
+  <!-- ============ PLATFORM STRIP ============ -->
+  <section class="logos logos--soft" aria-label="Channels we manage">
+    <div class="container">
+      <p class="logos__label" data-i18n="logos.platforms">Channels &amp; platforms we manage</p>
+      <div class="logos__strip">
+        <span class="logos__name">Booking.com</span>
+        <span class="logos__name">Airbnb</span>
+        <span class="logos__name">Expedia</span>
+        <span class="logos__name">Google Hotel Ads</span>
+        <span class="logos__name">Trivago</span>
+        <span class="logos__name">TripAdvisor</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PLATFORM / PROPRIETARY TOOLS ============ -->
+  <section class="section" id="platform">
+    <div class="container">
+      <div class="section__head section__head--center">
+        <p class="kicker" data-i18n="platform.kicker">Proprietary technology</p>
+        <h2 class="h2" data-i18n="platform.h2">We couldn't find the tools we needed. So we built them.</h2>
+        <p class="section__sub" data-i18n="platform.sub">Most consultancies work with whatever the market hands them. We kept hitting the same limits — so we built our own systems. They learn from every property, every week, and get sharper the longer they run.</p>
+      </div>
+
+      <div class="tools">
+
+        <!-- Pacer -->
+        <article class="tool">
+          <div class="tool__media">
+            <div class="mock mock--dark">
+              <div class="mock__bar"><span class="mock__dots"><i></i><i></i><i></i></span><span class="mock__title">Pacer · Weekly forecast</span></div>
+              <div class="mock__body">
+                <div class="mkpis">
+                  <div class="mkpi"><b>92%</b><span>CONFIDENCE</span></div>
+                  <div class="mkpi"><b>+8.4%</b><span>PACE VS LY</span></div>
+                  <div class="mkpi"><b>78%</b><span>OCC · 30D</span></div>
+                </div>
+                <div class="mchart">
+                  <span style="--h:34%"></span><span style="--h:47%"></span><span style="--h:41%"></span>
+                  <span style="--h:58%"></span><span style="--h:52%"></span><span style="--h:69%"></span>
+                  <span class="is-hi" style="--h:88%"></span><span class="is-hi" style="--h:80%"></span>
+                </div>
+                <div class="mrec"><span>▲</span><span>Recommend <b>+8% Fri–Sat</b> — pickup three weeks out is running ahead of the three-year curve.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="tool__body">
+            <span class="tool__tag">Pacer</span>
+            <h3 class="tool__title" data-i18n="tool.1.t">Revenue management that learns.</h3>
+            <p class="tool__desc" data-i18n="tool.1.d">A self-learning revenue system that forecasts demand and recommends pricing for every property, every week — then audits its own recommendations to find where it was wrong.</p>
+            <ul class="tool__points">
+              <li data-i18n="tool.1.p1"><b>Forecasts from your own history</b> — pickup curves built per property from multi-year on-the-books data, not generic market averages.</li>
+              <li data-i18n="tool.1.p2"><b>Regime-aware</b> — it re-weights seasons when the market shifts, so one disrupted year doesn't poison the model.</li>
+              <li data-i18n="tool.1.p3"><b>It critiques itself</b> — a dedicated audit layer scores past recommendations and recalibrates automatically.</li>
+              <li data-i18n="tool.1.p4"><b>Runs on schedule</b> — the weekly pipeline runs in the cloud and arrives as a decision-ready dashboard.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- OpenBook -->
+        <article class="tool tool--rev">
+          <div class="tool__media">
+            <div class="mock">
+              <div class="mock__bar"><span class="mock__dots"><i></i><i></i><i></i></span><span class="mock__title">OpenBook · Channel &amp; demand mix</span></div>
+              <div class="mock__body">
+                <div class="mkpis">
+                  <div class="mkpi"><b>14.2k</b><span>RESERVATIONS</span></div>
+                  <div class="mkpi"><b>3.4</b><span>AVG LOS</span></div>
+                  <div class="mkpi"><b>18%</b><span>CANCEL RATE</span></div>
+                </div>
+                <div class="mbars">
+                  <div class="mbar"><span>Booking.com</span><span class="mbar__track"><i style="--w:100%"></i></span><span class="mbar__val">52%</span></div>
+                  <div class="mbar"><span>Direct</span><span class="mbar__track"><i style="--w:40%"></i></span><span class="mbar__val">21%</span></div>
+                  <div class="mbar"><span>Airbnb</span><span class="mbar__track"><i style="--w:29%"></i></span><span class="mbar__val">15%</span></div>
+                  <div class="mbar"><span>Expedia</span><span class="mbar__track"><i style="--w:23%"></i></span><span class="mbar__val">12%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tool__body">
+            <span class="tool__tag">OpenBook</span>
+            <h3 class="tool__title" data-i18n="tool.2.t">Your booking history already holds the answers.</h3>
+            <p class="tool__desc" data-i18n="tool.2.d">Reservation analytics that reads an export from virtually any property-management system or channel, and turns it into the picture most owners never get to see.</p>
+            <ul class="tool__points">
+              <li data-i18n="tool.2.p1"><b>Source-agnostic</b> — it detects the format and normalises it, so data from different systems finally becomes comparable.</li>
+              <li data-i18n="tool.2.p2"><b>The questions that matter</b> — channel mix, lead time, length of stay, room-type performance and seasonality.</li>
+              <li data-i18n="tool.2.p3"><b>Cancellations, quantified</b> — where revenue is actually lost, by channel and by booking window.</li>
+              <li data-i18n="tool.2.p4"><b>Runs in your browser</b> — the analysis happens on your machine; the data doesn't go anywhere.</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- Reporting -->
+        <article class="tool">
+          <div class="tool__media">
+            <div class="mock">
+              <div class="mock__bar"><span class="mock__dots"><i></i><i></i><i></i></span><span class="mock__title">Weekly reporting · pipeline</span></div>
+              <div class="mock__body">
+                <div class="mkpis">
+                  <div class="mkpi"><b>104%</b><span>OF TARGET</span></div>
+                  <div class="mkpi"><b>+6.1%</b><span>PACE WoW</span></div>
+                </div>
+                <div class="mrows">
+                  <div class="mrow"><span>Weekly pace report <em>compiled from live data</em></span><span class="mpill">Ready</span></div>
+                  <div class="mrow"><span>Monthly channel &amp; commission <em>reconciled to source</em></span><span class="mpill mpill--blue">Scheduled</span></div>
+                  <div class="mrow"><span>Client summary <em>awaiting human review</em></span><span class="mpill mpill--blue">In review</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tool__body">
+            <span class="tool__tag" data-i18n="tool.3.tag">Automated reporting</span>
+            <h3 class="tool__title" data-i18n="tool.3.t">Every client, the same discipline — every week.</h3>
+            <p class="tool__desc" data-i18n="tool.3.d">Weekly pace reports and monthly deep-dives are assembled automatically from live data, then reviewed by a human before they reach you. Consistency is the product.</p>
+            <ul class="tool__points">
+              <li data-i18n="tool.3.p1"><b>Weekly pace</b> — where the month stands against target, and exactly what changed since last week.</li>
+              <li data-i18n="tool.3.p2"><b>Monthly deep-dive</b> — channel performance, room-type mix and commission, reconciled to the source data.</li>
+              <li data-i18n="tool.3.p3"><b>Written to be read</b> — the numbers arrive with the narrative, not as a raw spreadsheet.</li>
+              <li data-i18n="tool.3.p4"><b>Reviewed, never blind-sent</b> — automation does the assembly; the judgement stays human.</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
   <!-- ============ APPROACH ============ -->
   <section class="section" id="approach">
     <div class="container">
@@ -227,9 +382,23 @@
       <div class="stats">
         <div class="stat"><div class="stat__num">+25%</div><div class="stat__label" data-i18n="results.s1">Average revenue growth</div></div>
         <div class="stat"><div class="stat__num">360°</div><div class="stat__label" data-i18n="results.s2">Digital coverage</div></div>
-        <div class="stat"><div class="stat__num">4</div><div class="stat__label" data-i18n="results.s3">Markets: IL · CY · GR · UK</div></div>
+        <div class="stat"><div class="stat__num">4</div><div class="stat__label" data-i18n="results.s3">Markets: US · Europe · Middle East · Asia</div></div>
         <div class="stat"><div class="stat__num">2016</div><div class="stat__label" data-i18n="results.s4">Trusted since</div></div>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIAL ============ -->
+  <section class="section">
+    <div class="container">
+      <figure class="quote">
+        <span class="quote__mark" aria-hidden="true">&ldquo;</span>
+        <blockquote class="quote__text" data-i18n="quote.text">Starting to work with Itai increased our revenue by at least 25%. His attention to detail and knowledge of the hospitality market make him special as a revenue and digital marketing manager. Itai, with your hard work and great personal service, you are an asset to any team — and an absolute pleasure to work with.</blockquote>
+        <figcaption class="quote__who">
+          <span class="quote__name">Raed A. Leil</span>
+          <span class="quote__role" data-i18n="quote.role">Hotel General Manager · YMCA Three Arches</span>
+        </figcaption>
+      </figure>
     </div>
   </section>
 
@@ -257,8 +426,8 @@
         </ul>
         <div class="contact__social">
           <a class="btn btn--wa" href="https://wa.me/972528895995" target="_blank" rel="noopener" data-i18n="contact.wa">Chat on WhatsApp</a>
-          <a class="iconbtn" href="https://www.linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn" data-social="linkedin">in</a>
-          <a class="iconbtn" href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook" data-social="facebook">f</a>
+          <a class="iconbtn" href="https://www.linkedin.com/company/d-consulting-israel/" target="_blank" rel="noopener" aria-label="D Consulting on LinkedIn" data-social="linkedin">in</a>
+          <a class="iconbtn" href="https://www.facebook.com/dconsultingtravel" target="_blank" rel="noopener" aria-label="D Consulting on Facebook" data-social="facebook">f</a>
         </div>
       </div>
 
@@ -291,18 +460,20 @@
 <footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
-      <span class="brand__mark brand__mark--light">D&nbsp;<span class="gold">C</span>ONSULTING</span>
+      <img class="footer__logo" src="assets/logo-dark.png" alt="D Consulting" width="1808" height="544" loading="lazy">
       <p class="footer__tag" data-i18n="footer.tag">Developing innovative strategies · Achieving success</p>
     </div>
     <nav class="footer__links" aria-label="Footer">
       <a href="#about" data-i18n="nav.about">About</a>
       <a href="#services" data-i18n="nav.services">Services</a>
+      <a href="#platform" data-i18n="nav.platform">Platform</a>
       <a href="#approach" data-i18n="nav.approach">Approach</a>
       <a href="#contact" data-i18n="nav.contact">Contact</a>
     </nav>
   </div>
   <div class="container footer__bottom">
     <span>© <span id="year">2026</span> D Consulting. <span data-i18n="footer.rights">All rights reserved.</span></span>
+    <a class="footer__privacy" href="privacy.html" data-i18n="footer.privacy">Privacy policy</a>
   </div>
 </footer>
 
@@ -317,7 +488,14 @@
   "email": "itai@dconsult.me",
   "telephone": "+972-52-889-5995",
   "address": { "@type": "PostalAddress", "addressLocality": "Tel Aviv-Yafo", "addressCountry": "IL" },
-  "areaServed": ["IL", "CY", "GR", "GB"]
+  "areaServed": ["United States", "Europe", "Middle East", "Asia"],
+  "foundingDate": "2016",
+  "logo": "https://dconsult.me/assets/icon-512.png",
+  "sameAs": [
+    "https://www.linkedin.com/company/d-consulting-israel/",
+    "https://www.linkedin.com/in/itai-gal/",
+    "https://www.facebook.com/dconsultingtravel"
+  ]
 }
 </script>
 
