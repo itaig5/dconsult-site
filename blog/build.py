@@ -120,7 +120,7 @@ def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=No
         if switch else ""
     )
     # keep the visitor's language when they head back to the main site
-    home = "../index.html?lang=he" if lang == "he" else "../index.html"
+    home = "../?lang=he" if lang == "he" else "../"
 
     def _nl(href, key, cls=""):
         c = f' class="{cls}"' if cls else ""
@@ -196,11 +196,11 @@ def foot(lang):
       <p class="footer__tag">Developing innovative strategies &middot; Achieving success</p>
     </div>
     <nav class="footer__links" aria-label="Footer">
-      <a href="../index.html#about">{html.escape(u['n_about'])}</a>
-      <a href="../index.html#services">{html.escape(u['n_services'])}</a>
-      <a href="../index.html#platform">{html.escape(u['n_platform'])}</a>
+      <a href="../#about">{html.escape(u['n_about'])}</a>
+      <a href="../#services">{html.escape(u['n_services'])}</a>
+      <a href="../#platform">{html.escape(u['n_platform'])}</a>
       <a href="index.html">{html.escape(u['n_insights'])}</a>
-      <a href="../index.html#contact">{html.escape(u['n_contact'])}</a>
+      <a href="../#contact">{html.escape(u['n_contact'])}</a>
     </nav>
   </div>
   <div class="container footer__bottom">
@@ -281,7 +281,7 @@ def build_article(p, alts=None):
     <article class="post__body">
 {p['body_html']}
     </article>
-    <p class="post__foot"><a class="btn btn--primary" href="../index.html#contact">{'בואו נדבר' if p['lang']=='he' else "Let's talk"}</a></p>
+    <p class="post__foot"><a class="btn btn--primary" href="../#contact">{'בואו נדבר' if p['lang']=='he' else "Let's talk"}</a></p>
   </div>
 </main>
 {schema}
@@ -340,7 +340,7 @@ def build_index(posts):
     }, ensure_ascii=False, indent=1) + "\n</script>\n")
     return (
         head("Insights — D Consulting", UI["en"]["sub"], "en", f"{SITE}/blog/",
-             back=("../index.html", UI["en"]["home"]),
+             back=("../", UI["en"]["home"]),
              alts=[("en", f"{SITE}/blog/?lang=en"), ("he", f"{SITE}/blog/?lang=he")],
              switch="?lang=he")
         + f"""<main class="section">
@@ -365,11 +365,11 @@ def build_index(posts):
       if (t) a.textContent = t;
     }});
     /* keep the language when heading back to the main site */
-    [].forEach.call(document.querySelectorAll('a[href*="index.html"]'), function (a) {{
+    [].forEach.call(document.querySelectorAll('a[href^="../"]'), function (a) {{
       var h = a.getAttribute('href');
-      if (h.indexOf('../index.html') !== 0) return;
+      if (h.indexOf('../') !== 0 || h.indexOf('../assets') === 0) return;
       var parts = h.split('#');
-      a.setAttribute('href', '../index.html' + (he ? '?lang=he' : '') + (parts[1] ? '#' + parts[1] : ''));
+      a.setAttribute('href', '../' + (he ? '?lang=he' : '') + (parts[1] ? '#' + parts[1] : ''));
     }});
     var sw = document.querySelector('.langtoggle');
     if (sw) sw.textContent = he ? 'English' : 'עברית';
