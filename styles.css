@@ -332,6 +332,52 @@ a{color:inherit;text-decoration:none}
 .founder__photo{width:56px;height:56px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:var(--shadow-sm)}
 
 /* ===================================================================
+   BLOG
+   =================================================================== */
+.legalbar{background:var(--ink-900);padding:16px 0}
+.legalbar__inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.legalbar .back{color:#b9c5d8;font-size:14.5px;transition:color .2s}
+.legalbar .back:hover{color:var(--gold-bright)}
+
+/* index cards */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:8px}
+.pcard{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s}
+.pcard:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:transparent}
+.pcard__link{display:block;height:100%}
+.pcard__img{width:100%;height:180px;object-fit:cover}
+.pcard__body{padding:24px 22px}
+.pcard__meta{font-size:12.5px;color:var(--muted);margin:0 0 9px;letter-spacing:.02em}
+.pcard__title{font-family:var(--serif);font-size:23px;font-weight:700;line-height:1.2;margin:0 0 10px;color:var(--ink)}
+.pcard:hover .pcard__title{color:var(--blue)}
+.pcard__excerpt{font-size:14.5px;color:var(--muted);margin:0 0 14px;line-height:1.6}
+.pempty{text-align:center;color:var(--muted);font-size:17px;padding:40px 0}
+
+/* tags */
+.post__tags{display:flex;flex-wrap:wrap;gap:7px}
+.ptag{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);background:rgba(46,111,209,.08);border:1px solid rgba(46,111,209,.18);padding:4px 10px;border-radius:999px}
+
+/* article */
+.post{padding:52px 0 90px}
+.post__wrap{max-width:740px;margin-inline:auto;padding-inline:24px}
+.post__meta{font-size:13.5px;color:var(--muted);margin:0 0 12px;letter-spacing:.02em}
+.post__title{font-family:var(--serif);font-size:clamp(32px,5.2vw,50px);font-weight:700;line-height:1.08;letter-spacing:-.015em;margin:0 0 16px;color:var(--ink)}
+.post__hero{width:100%;height:auto;border-radius:var(--radius);margin:26px 0 8px;border:1px solid var(--line)}
+.post__body{margin-top:30px}
+.post__body p{font-size:17.5px;line-height:1.75;color:#33415a;margin:0 0 19px}
+.post__body h2{font-family:var(--serif);font-size:clamp(24px,3.2vw,31px);font-weight:700;line-height:1.2;color:var(--ink);margin:38px 0 13px}
+.post__body h3{font-size:20px;font-weight:700;color:var(--ink);margin:30px 0 10px}
+.post__body ul,.post__body ol{margin:0 0 20px;padding-inline-start:24px;display:grid;gap:10px}
+.post__body li{font-size:17px;line-height:1.7;color:#33415a}
+.post__body strong{color:var(--ink);font-weight:600}
+.post__body a{color:var(--blue);text-decoration:underline;text-underline-offset:2px}
+.post__body blockquote{margin:26px 0;padding-inline-start:20px;border-inline-start:3px solid var(--gold);font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.5;color:var(--ink)}
+.post__body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:15px;background:var(--bg-soft);padding:2px 6px;border-radius:5px}
+.post__foot{margin-top:44px;padding-top:30px;border-top:1px solid var(--line)}
+
+@media (max-width:980px){ .pgrid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){ .pgrid{grid-template-columns:1fr} .post{padding:36px 0 64px} }
+
+/* ===================================================================
    RTL adjustments
    =================================================================== */
 html[dir="rtl"] .brand__mark,html[dir="rtl"] .footer__tag,html[dir="rtl"] .eyebrow{letter-spacing:normal}

@@ -11,6 +11,7 @@
     "nav.about": "אודות",
     "nav.services": "שירותים",
     "nav.platform": "הפלטפורמה",
+    "nav.blog": "תובנות",
     "nav.approach": "הגישה",
     "nav.results": "תוצאות",
     "nav.contact": "צור קשר",
