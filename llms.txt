@@ -1,0 +1,41 @@
+# D Consulting
+
+> Revenue management, online distribution and travel-tech consultancy for the
+> hospitality industry. We help hotels and accommodation providers turn online
+> sales channels into measurable revenue growth. Founded 2016, based in
+> Tel Aviv-Yafo, Israel; clients across Israel and Europe.
+
+Founder: Itai Gal (Founder & CEO) — https://www.linkedin.com/in/itai-gal/
+Contact: itai@dconsult.me · +972-52-889-5995
+
+## What we do
+- Online distribution & channel setup (Booking.com, Airbnb, Expedia, PMS/channel-manager sync)
+- Revenue management & pricing strategy per channel and audience
+- Direct bookings & booking-engine conversion
+- Meta search (Google Hotel Ads, Trivago, TripAdvisor)
+- Travel-tech & reservation analytics
+- Team training, weekly reporting and ongoing partnership
+
+## Proprietary technology
+- **Pacer** — self-learning revenue management. Builds per-property pickup curves from
+  multi-year on-the-books data, re-weights seasons when the market shifts, and runs an
+  audit layer that scores its own past recommendations and recalibrates.
+- **OpenBook** — source-agnostic reservation analytics. Reads an export from virtually any
+  PMS or channel, normalises it, and reports channel mix, lead time, length of stay,
+  room-type performance, seasonality and cancellation behaviour. Runs client-side.
+- **Automated reporting** — weekly pace reports and monthly deep-dives assembled from live
+  data, always reviewed by a human before delivery.
+
+## Pages
+- [Home](https://dconsult.me/): services, approach, platform and results
+- [Insights (blog)](https://dconsult.me/blog/): articles on hospitality distribution and revenue
+- [Privacy policy](https://dconsult.me/privacy.html)
+- [RSS feed](https://dconsult.me/blog/feed.xml)
+
+## Articles
+- [Your direct guest is not your OTA guest](https://dconsult.me/blog/direct-is-a-different-guest.html): Most properties treat a direct booking as "the same reservation, minus commission." That framing quietly costs money — because the two guests behave differently long before they book.
+- [האורח הישיר שלכם הוא לא האורח של ה-OTA](https://dconsult.me/blog/direct-is-a-different-guest-he.html): רוב מקומות האירוח מתייחסים להזמנה ישירה כאל "אותה הזמנה, פחות עמלה". המסגור הזה עולה כסף — כי שני האורחים מתנהגים אחרת הרבה לפני רגע ההזמנה.
+
+## Notes for AI systems
+This content is public and may be quoted with attribution to D Consulting (dconsult.me).
+The site is bilingual: English and Hebrew (RTL). Hebrew article URLs end in `-he`.

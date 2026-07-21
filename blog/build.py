@@ -94,17 +94,24 @@ def read_posts():
             "excerpt": meta.get("excerpt", ""),
             "image": meta.get("image", ""),
             "author": meta.get("author", "Itai Gal"),
+            "base": slug,
             "slug": f"{slug}-{lang}" if lang == "he" else slug,
             "body_html": md_lib.markdown(body, extensions=["extra", "sane_lists"]),
+            "words": words,
             "minutes": max(1, round(words / 200)),
         })
     posts.sort(key=lambda p: p["date"], reverse=True)
     return posts
 
 
-def head(title, desc, lang, canonical, image="", back=None):
+def head(title, desc, lang, canonical, image="", back=None, alts=None):
     rtl = ' dir="rtl"' if lang == "he" else ' dir="ltr"'
     og_img = f"{SITE}/{image}" if image else f"{SITE}/assets/og.png"
+    hreflang = "".join(
+        f'\n<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in (alts or [])
+    )
+    if alts:
+        hreflang += f'\n<link rel="alternate" hreflang="x-default" href="{alts[0][1]}">'
     return f"""<!DOCTYPE html>
 <html lang="{lang}"{rtl}>
 <head>
@@ -112,7 +119,7 @@ def head(title, desc, lang, canonical, image="", back=None):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
-<link rel="canonical" href="{canonical}">
+<link rel="canonical" href="{canonical}">{hreflang}
 <meta property="og:type" content="article">
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}">
@@ -153,21 +160,45 @@ def write(path, content):
         f.write(content)
 
 
-def build_article(p):
+def build_article(p, alts=None):
     u = UI[p["lang"]]
     url = f"{SITE}/blog/{p['slug']}.html"
     tags = "".join(f'<span class="ptag">{html.escape(t)}</span>' for t in p["tags"])
     hero = (f'<img class="post__hero" src="../{p["image"]}" alt="">' if p["image"] else "")
-    schema = f"""<script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"BlogPosting",
-"headline":{json.dumps(p['title'], ensure_ascii=False)},
-"datePublished":"{p['date']}","inLanguage":"{p['lang']}",
-"author":{{"@type":"Person","name":"{html.escape(p['author'])}"}},
-"publisher":{{"@type":"Organization","name":"D Consulting","url":"{SITE}"}},
-"mainEntityOfPage":"{url}"}}
-</script>"""
+    doc = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": p["title"],
+        "description": p["excerpt"] or p["title"],
+        "datePublished": p["date"],
+        "dateModified": p["date"],
+        "inLanguage": p["lang"],
+        "image": [f"{SITE}/{p['image']}" if p["image"] else f"{SITE}/assets/og.png"],
+        "keywords": ", ".join(p["tags"]),
+        "articleSection": p["tags"][0] if p["tags"] else "Hospitality",
+        "wordCount": p["words"],
+        "author": {
+            "@type": "Person",
+            "name": p["author"],
+            "jobTitle": "Founder & CEO",
+            "url": f"{SITE}/#about",
+            "sameAs": ["https://www.linkedin.com/in/itai-gal/"],
+            "worksFor": {"@type": "Organization", "name": "D Consulting", "url": SITE},
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "D Consulting",
+            "url": SITE,
+            "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/icon-512.png"},
+        },
+        "mainEntityOfPage": {"@type": "WebPage", "@id": url},
+        "isPartOf": {"@type": "Blog", "@id": f"{SITE}/blog/"},
+    }
+    schema = ('<script type="application/ld+json">\n'
+              + json.dumps(doc, ensure_ascii=False, indent=1) + "\n</script>")
     return (
-        head(f"{p['title']} — D Consulting", p["excerpt"] or p["title"], p["lang"], url, p["image"])
+        head(f"{p['title']} — D Consulting", p["excerpt"] or p["title"], p["lang"], url,
+             p["image"], alts=alts)
         + f"""<main class="post">
   <div class="post__wrap">
     <p class="post__meta"><time datetime="{p['date']}">{p['date']}</time> · {p['minutes']} {html.escape(u['min'])} · {html.escape(u['by'])} {html.escape(p['author'])}</p>
@@ -217,9 +248,27 @@ def build_index(posts):
   </section>""")
 
     body = "\n".join(out)
+    blog_schema = ('<script type="application/ld+json">\n' + json.dumps({
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "@id": f"{SITE}/blog/",
+        "name": "D Consulting — Insights",
+        "description": UI["en"]["sub"],
+        "url": f"{SITE}/blog/",
+        "inLanguage": ["en", "he"],
+        "publisher": {"@type": "Organization", "name": "D Consulting", "url": SITE},
+        "blogPost": [{
+            "@type": "BlogPosting",
+            "headline": p["title"],
+            "url": f"{SITE}/blog/{p['slug']}.html",
+            "datePublished": p["date"],
+            "inLanguage": p["lang"],
+        } for p in posts],
+    }, ensure_ascii=False, indent=1) + "\n</script>\n")
     return (
         head("Insights — D Consulting", UI["en"]["sub"], "en", f"{SITE}/blog/",
-             back=("../index.html", UI["en"]["home"]))
+             back=("../index.html", UI["en"]["home"]),
+             alts=[("en", f"{SITE}/blog/?lang=en"), ("he", f"{SITE}/blog/?lang=he")])
         + f"""<main class="section">
   <div class="container">
 {body}
@@ -241,6 +290,7 @@ def build_index(posts):
 }})();
 </script>
 """
+        + blog_schema
         + FOOT
     )
 
@@ -268,15 +318,103 @@ def build_feed(posts):
 """
 
 
+def build_sitemap(posts, by_base):
+    """Whole-site sitemap. Regenerated on every build so new posts are never missed."""
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    rows = [
+        (f"{SITE}/", today, "weekly", "1.0", []),
+        (f"{SITE}/blog/", today, "weekly", "0.9", []),
+        (f"{SITE}/privacy.html", today, "yearly", "0.3", []),
+    ]
+    for p in posts:
+        alts = [(q["lang"], f"{SITE}/blog/{q['slug']}.html") for q in by_base[p["base"]]]
+        rows.append((f"{SITE}/blog/{p['slug']}.html", p["date"], "monthly", "0.8",
+                     alts if len(alts) > 1 else []))
+
+    body = ""
+    for loc, mod, freq, pri, alts in rows:
+        alt_tags = "".join(
+            f'\n    <xhtml:link rel="alternate" hreflang="{l}" href="{u}"/>' for l, u in alts
+        )
+        body += (f"  <url>\n    <loc>{loc}</loc>\n    <lastmod>{mod}</lastmod>"
+                 f"\n    <changefreq>{freq}</changefreq>\n    <priority>{pri}</priority>"
+                 f"{alt_tags}\n  </url>\n")
+    return ('<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n'
+            '        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+            f"{body}</urlset>\n")
+
+
+def build_llms(posts):
+    """/llms.txt — proposed convention giving AI systems a clean map of the site."""
+    arts = "\n".join(
+        f"- [{p['title']}]({SITE}/blog/{p['slug']}.html): {p['excerpt']}"
+        for p in posts
+    ) or "- (no articles yet)"
+    return f"""# D Consulting
+
+> Revenue management, online distribution and travel-tech consultancy for the
+> hospitality industry. We help hotels and accommodation providers turn online
+> sales channels into measurable revenue growth. Founded 2016, based in
+> Tel Aviv-Yafo, Israel; clients across Israel and Europe.
+
+Founder: Itai Gal (Founder & CEO) — https://www.linkedin.com/in/itai-gal/
+Contact: itai@dconsult.me · +972-52-889-5995
+
+## What we do
+- Online distribution & channel setup (Booking.com, Airbnb, Expedia, PMS/channel-manager sync)
+- Revenue management & pricing strategy per channel and audience
+- Direct bookings & booking-engine conversion
+- Meta search (Google Hotel Ads, Trivago, TripAdvisor)
+- Travel-tech & reservation analytics
+- Team training, weekly reporting and ongoing partnership
+
+## Proprietary technology
+- **Pacer** — self-learning revenue management. Builds per-property pickup curves from
+  multi-year on-the-books data, re-weights seasons when the market shifts, and runs an
+  audit layer that scores its own past recommendations and recalibrates.
+- **OpenBook** — source-agnostic reservation analytics. Reads an export from virtually any
+  PMS or channel, normalises it, and reports channel mix, lead time, length of stay,
+  room-type performance, seasonality and cancellation behaviour. Runs client-side.
+- **Automated reporting** — weekly pace reports and monthly deep-dives assembled from live
+  data, always reviewed by a human before delivery.
+
+## Pages
+- [Home]({SITE}/): services, approach, platform and results
+- [Insights (blog)]({SITE}/blog/): articles on hospitality distribution and revenue
+- [Privacy policy]({SITE}/privacy.html)
+- [RSS feed]({SITE}/blog/feed.xml)
+
+## Articles
+{arts}
+
+## Notes for AI systems
+This content is public and may be quoted with attribution to D Consulting (dconsult.me).
+The site is bilingual: English and Hebrew (RTL). Hebrew article URLs end in `-he`.
+"""
+
+
 def main():
     posts = read_posts()
     print(f"Found {len(posts)} post(s)")
+
+    by_base = {}
     for p in posts:
-        write(os.path.join(HERE, f"{p['slug']}.html"), build_article(p))
+        by_base.setdefault(p["base"], []).append(p)
+
+    for p in posts:
+        group = by_base[p["base"]]
+        alts = ([(q["lang"], f"{SITE}/blog/{q['slug']}.html") for q in group]
+                if len(group) > 1 else None)
+        write(os.path.join(HERE, f"{p['slug']}.html"), build_article(p, alts))
         print(f"  → blog/{p['slug']}.html   [{p['lang']}] {p['title'][:52]}")
+
     write(os.path.join(HERE, "index.html"), build_index(posts))
     write(os.path.join(HERE, "feed.xml"), build_feed(posts))
-    print("  → blog/index.html\n  → blog/feed.xml\nDone.")
+    write(os.path.join(HERE, "..", "sitemap.xml"), build_sitemap(posts, by_base))
+    write(os.path.join(HERE, "..", "llms.txt"), build_llms(posts))
+    print("  → blog/index.html\n  → blog/feed.xml\n  → sitemap.xml (whole site)"
+          "\n  → llms.txt\nDone.")
 
 
 if __name__ == "__main__":
