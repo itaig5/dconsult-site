@@ -37,6 +37,9 @@ UI = {
         "sub": "What we're seeing in the market, in the channels, and in the data — written for people who run properties.",
         "empty": "First articles coming shortly.", "read": "Read article",
         "min": "min read", "by": "By",
+        "n_about": "About", "n_services": "Services", "n_platform": "Platform",
+        "n_approach": "Approach", "n_insights": "Insights", "n_contact": "Contact",
+        "n_cta": "Let's talk", "other": "עברית",
     },
     "he": {
         "back": "→ כל המאמרים", "home": "→ חזרה לאתר", "blog": "תובנות",
@@ -44,6 +47,9 @@ UI = {
         "sub": "מה אנחנו רואים בשוק, בערוצים ובנתונים — נכתב עבור מי שמנהל נכסים בפועל.",
         "empty": "המאמרים הראשונים יעלו בקרוב.", "read": "לקריאת המאמר",
         "min": "דק' קריאה", "by": "מאת",
+        "n_about": "אודות", "n_services": "שירותים", "n_platform": "הפלטפורמה",
+        "n_approach": "הגישה", "n_insights": "תובנות", "n_contact": "צור קשר",
+        "n_cta": "דברו איתנו", "other": "English",
     },
 }
 
@@ -104,9 +110,15 @@ def read_posts():
     return posts
 
 
-def head(title, desc, lang, canonical, image="", back=None, alts=None):
+def head(title, desc, lang, canonical, image="", back=None, alts=None, switch=None):
     rtl = ' dir="rtl"' if lang == "he" else ' dir="ltr"'
     og_img = f"{SITE}/{image}" if image else f"{SITE}/assets/og.png"
+    u = UI[lang]
+    switch_html = (
+        f'\n      <a class="langtoggle" href="{switch}" '
+        f'aria-label="Switch language">{html.escape(u["other"])}</a>'
+        if switch else ""
+    )
     hreflang = "".join(
         f'\n<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in (alts or [])
     )
@@ -133,23 +145,70 @@ def head(title, desc, lang, canonical, image="", back=None, alts=None):
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
-<div class="legalbar">
-  <div class="container legalbar__inner">
-    <a href="../index.html" aria-label="D Consulting home"><img src="../assets/logo-dark.png" alt="D Consulting" style="height:38px;width:auto"></a>
-    <a class="back" href="{(back or ('index.html', UI[lang]['back']))[0]}">{html.escape((back or ('index.html', UI[lang]['back']))[1])}</a>
+<body class="subpage">
+
+<!-- full site nav, so the reader never feels they have left the site -->
+<header class="nav scrolled" id="nav">
+  <div class="container nav__inner">
+    <a href="../index.html" class="brand" aria-label="D Consulting home">
+      <img class="brand__logo brand__logo--light" src="../assets/logo-light.png" alt="D Consulting" width="1808" height="544">
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Primary">
+      <a href="../index.html#about">{html.escape(u['n_about'])}</a>
+      <a href="../index.html#services">{html.escape(u['n_services'])}</a>
+      <a href="../index.html#platform">{html.escape(u['n_platform'])}</a>
+      <a href="../index.html#approach">{html.escape(u['n_approach'])}</a>
+      <a href="index.html" class="active">{html.escape(u['n_insights'])}</a>
+      <a href="../index.html#contact">{html.escape(u['n_contact'])}</a>
+    </nav>
+    <div class="nav__actions">{switch_html}
+      <a href="../index.html#contact" class="btn btn--sm btn--primary">{html.escape(u['n_cta'])}</a>
+      <button class="hamburger" id="hamburger" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
-</div>
+</header>
+
+<p class="crumbs"><a href="../index.html">D Consulting</a> <span>/</span> <a href="index.html">{html.escape(u['n_insights'])}</a></p>
 """
 
 
-FOOT = """<footer class="footer">
-  <div class="container footer__bottom" style="border:0">
+def foot(lang):
+    u = UI[lang]
+    return f"""<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img class="footer__logo" src="../assets/logo-dark.png" alt="D Consulting" width="1808" height="544" loading="lazy">
+      <p class="footer__tag">Developing innovative strategies &middot; Achieving success</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer">
+      <a href="../index.html#about">{html.escape(u['n_about'])}</a>
+      <a href="../index.html#services">{html.escape(u['n_services'])}</a>
+      <a href="../index.html#platform">{html.escape(u['n_platform'])}</a>
+      <a href="index.html">{html.escape(u['n_insights'])}</a>
+      <a href="../index.html#contact">{html.escape(u['n_contact'])}</a>
+    </nav>
+  </div>
+  <div class="container footer__bottom">
     <span>&copy; <span id="year">2026</span> D Consulting.</span>
     <a class="footer__privacy" href="../privacy.html">Privacy</a>
   </div>
 </footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+(function () {{
+  var b = document.getElementById('hamburger'), l = document.getElementById('navLinks');
+  if (!b || !l) return;
+  function close() {{ l.classList.remove('open'); b.classList.remove('active'); b.setAttribute('aria-expanded', 'false'); }}
+  b.addEventListener('click', function () {{
+    var o = l.classList.toggle('open');
+    b.classList.toggle('active', o);
+    b.setAttribute('aria-expanded', o ? 'true' : 'false');
+  }});
+  [].forEach.call(l.querySelectorAll('a'), function (a) {{ a.addEventListener('click', close); }});
+}})();
+</script>
 </body>
 </html>
 """
@@ -196,9 +255,10 @@ def build_article(p, alts=None):
     }
     schema = ('<script type="application/ld+json">\n'
               + json.dumps(doc, ensure_ascii=False, indent=1) + "\n</script>")
+    other = next((v.rsplit("/", 1)[-1] for l, v in (alts or []) if l != p["lang"]), None)
     return (
         head(f"{p['title']} — D Consulting", p["excerpt"] or p["title"], p["lang"], url,
-             p["image"], alts=alts)
+             p["image"], alts=alts, switch=other)
         + f"""<main class="post">
   <div class="post__wrap">
     <p class="post__meta"><time datetime="{p['date']}">{p['date']}</time> · {p['minutes']} {html.escape(u['min'])} · {html.escape(u['by'])} {html.escape(p['author'])}</p>
@@ -213,7 +273,7 @@ def build_article(p, alts=None):
 </main>
 {schema}
 """
-        + FOOT
+        + foot(p["lang"])
     )
 
 
@@ -268,7 +328,8 @@ def build_index(posts):
     return (
         head("Insights — D Consulting", UI["en"]["sub"], "en", f"{SITE}/blog/",
              back=("../index.html", UI["en"]["home"]),
-             alts=[("en", f"{SITE}/blog/?lang=en"), ("he", f"{SITE}/blog/?lang=he")])
+             alts=[("en", f"{SITE}/blog/?lang=en"), ("he", f"{SITE}/blog/?lang=he")],
+             switch="?lang=he")
         + f"""<main class="section">
   <div class="container">
 {body}
@@ -291,7 +352,7 @@ def build_index(posts):
 </script>
 """
         + blog_schema
-        + FOOT
+        + foot("en")
     )
 
 

@@ -334,6 +334,15 @@ a{color:inherit;text-decoration:none}
 /* ===================================================================
    BLOG
    =================================================================== */
+/* sub-pages (blog, privacy) carry the fixed site nav, so clear its height */
+body.subpage{padding-top:70px}
+.crumbs{max-width:var(--maxw);margin:22px auto 0;padding-inline:24px;font-size:13px;color:var(--muted)}
+.crumbs a{color:var(--muted);transition:color .2s}
+.crumbs a:hover{color:var(--blue)}
+.crumbs span{opacity:.5;margin-inline:6px}
+.nav__links a.active{color:var(--ink)}
+.nav.scrolled .nav__links a.active::after{width:100%}
+
 .legalbar{background:var(--ink-900);padding:16px 0}
 .legalbar__inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
 .legalbar .back{color:#b9c5d8;font-size:14.5px;transition:color .2s}

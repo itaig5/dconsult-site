@@ -22,13 +22,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700;800&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
 </head>
-<body>
-<div class="legalbar">
-  <div class="container legalbar__inner">
-    <a href="../index.html" aria-label="D Consulting home"><img src="../assets/logo-dark.png" alt="D Consulting" style="height:38px;width:auto"></a>
-    <a class="back" href="index.html">→ כל המאמרים</a>
+<body class="subpage">
+
+<!-- full site nav, so the reader never feels they have left the site -->
+<header class="nav scrolled" id="nav">
+  <div class="container nav__inner">
+    <a href="../index.html" class="brand" aria-label="D Consulting home">
+      <img class="brand__logo brand__logo--light" src="../assets/logo-light.png" alt="D Consulting" width="1808" height="544">
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Primary">
+      <a href="../index.html#about">אודות</a>
+      <a href="../index.html#services">שירותים</a>
+      <a href="../index.html#platform">הפלטפורמה</a>
+      <a href="../index.html#approach">הגישה</a>
+      <a href="index.html" class="active">תובנות</a>
+      <a href="../index.html#contact">צור קשר</a>
+    </nav>
+    <div class="nav__actions">
+      <a class="langtoggle" href="direct-is-a-different-guest.html" aria-label="Switch language">English</a>
+      <a href="../index.html#contact" class="btn btn--sm btn--primary">דברו איתנו</a>
+      <button class="hamburger" id="hamburger" type="button" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
-</div>
+</header>
+
+<p class="crumbs"><a href="../index.html">D Consulting</a> <span>/</span> <a href="index.html">תובנות</a></p>
 <main class="post">
   <div class="post__wrap">
     <p class="post__meta"><time datetime="2026-07-21">2026-07-21</time> · 3 דק&#x27; קריאה · מאת איתי גל</p>
@@ -116,11 +136,37 @@
 }
 </script>
 <footer class="footer">
-  <div class="container footer__bottom" style="border:0">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <img class="footer__logo" src="../assets/logo-dark.png" alt="D Consulting" width="1808" height="544" loading="lazy">
+      <p class="footer__tag">Developing innovative strategies &middot; Achieving success</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer">
+      <a href="../index.html#about">אודות</a>
+      <a href="../index.html#services">שירותים</a>
+      <a href="../index.html#platform">הפלטפורמה</a>
+      <a href="index.html">תובנות</a>
+      <a href="../index.html#contact">צור קשר</a>
+    </nav>
+  </div>
+  <div class="container footer__bottom">
     <span>&copy; <span id="year">2026</span> D Consulting.</span>
     <a class="footer__privacy" href="../privacy.html">Privacy</a>
   </div>
 </footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+(function () {
+  var b = document.getElementById('hamburger'), l = document.getElementById('navLinks');
+  if (!b || !l) return;
+  function close() { l.classList.remove('open'); b.classList.remove('active'); b.setAttribute('aria-expanded', 'false'); }
+  b.addEventListener('click', function () {
+    var o = l.classList.toggle('open');
+    b.classList.toggle('active', o);
+    b.setAttribute('aria-expanded', o ? 'true' : 'false');
+  });
+  [].forEach.call(l.querySelectorAll('a'), function (a) { a.addEventListener('click', close); });
+})();
+</script>
 </body>
 </html>
