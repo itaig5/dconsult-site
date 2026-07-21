@@ -19,13 +19,12 @@
 <link rel="icon" type="image/png" href="assets/icon-512.png">
 <link rel="apple-touch-icon" href="assets/icon-512.png">
 
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-7FGVV9022J"></script>
+<!-- Google Analytics 4 — deliberately NOT loaded here.
+     It is injected by script.js only after the visitor accepts analytics cookies (GDPR). -->
 <script>
+  window.DC_GA_ID = "G-7FGVV9022J";
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-7FGVV9022J');
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,7 +83,7 @@
         <ul class="hero__stats">
           <li><strong>+25%</strong><span data-i18n="hero.stat1">average revenue growth</span></li>
           <li><strong>360°</strong><span data-i18n="hero.stat2">digital solution</span></li>
-          <li><strong data-i18n="hero.stat3num">4 regions</strong><span data-i18n="hero.stat3">US · Europe · Middle East · Asia</span></li>
+          <li><strong data-i18n="hero.stat3num">Israel & Europe</strong><span data-i18n="hero.stat3">properties served</span></li>
         </ul>
       </div>
       <div class="hero__visual" aria-hidden="true">
@@ -382,7 +381,7 @@
       <div class="stats">
         <div class="stat"><div class="stat__num">+25%</div><div class="stat__label" data-i18n="results.s1">Average revenue growth</div></div>
         <div class="stat"><div class="stat__num">360°</div><div class="stat__label" data-i18n="results.s2">Digital coverage</div></div>
-        <div class="stat"><div class="stat__num">4</div><div class="stat__label" data-i18n="results.s3">Markets: US · Europe · Middle East · Asia</div></div>
+        <div class="stat"><div class="stat__num">IL · EU</div><div class="stat__label" data-i18n="results.s3">Markets served</div></div>
         <div class="stat"><div class="stat__num">2016</div><div class="stat__label" data-i18n="results.s4">Trusted since</div></div>
       </div>
     </div>
@@ -431,7 +430,7 @@
         </div>
       </div>
 
-      <form class="contact__form" id="contactForm" data-formspree="" novalidate>
+      <form class="contact__form" id="contactForm" data-formspree="mykrpwba" novalidate>
         <div class="field">
           <label for="cf-name" data-i18n="form.name">Name</label>
           <input id="cf-name" name="name" type="text" autocomplete="name" required>
@@ -477,6 +476,17 @@
   </div>
 </footer>
 
+<!-- ============ COOKIE CONSENT ============ -->
+<div class="consent" id="consent" role="dialog" aria-label="Cookie consent" hidden>
+  <div class="consent__inner">
+    <p class="consent__text" data-i18n="consent.text">We use analytics cookies to understand how this site is used. No advertising, no data selling. See our <a href="privacy.html">privacy policy</a>.</p>
+    <div class="consent__actions">
+      <button class="consent__btn" id="consentNo" type="button" data-i18n="consent.decline">Decline</button>
+      <button class="consent__btn consent__btn--yes" id="consentYes" type="button" data-i18n="consent.accept">Accept</button>
+    </div>
+  </div>
+</div>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -488,7 +498,7 @@
   "email": "itai@dconsult.me",
   "telephone": "+972-52-889-5995",
   "address": { "@type": "PostalAddress", "addressLocality": "Tel Aviv-Yafo", "addressCountry": "IL" },
-  "areaServed": ["United States", "Europe", "Middle East", "Asia"],
+  "areaServed": ["Israel", "Europe"],
   "foundingDate": "2016",
   "logo": "https://dconsult.me/assets/icon-512.png",
   "sameAs": [

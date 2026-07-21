@@ -292,6 +292,37 @@ a{color:inherit;text-decoration:none}
 .quote__name{font-weight:700;color:var(--ink);font-size:16px}
 .quote__role{font-size:14px;color:var(--muted)}
 
+/* ===================================================================
+   COOKIE CONSENT
+   =================================================================== */
+.consent{position:fixed;inset-block-end:18px;inset-inline:18px;z-index:200;display:flex;justify-content:center;pointer-events:none}
+.consent[hidden]{display:none}
+.consent__inner{
+  pointer-events:auto;display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center;
+  max-width:820px;width:100%;background:rgba(11,19,34,.97);color:#dbe4f0;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:16px 22px;
+  box-shadow:0 24px 60px rgba(0,0,0,.42);animation:consentUp .45s var(--ease) both;
+}
+@keyframes consentUp{from{opacity:0;transform:translateY(16px)}}
+.consent__text{margin:0;font-size:14px;line-height:1.55;flex:1;min-width:260px}
+.consent__text a{color:var(--gold-bright);text-decoration:underline;text-underline-offset:2px}
+.consent__actions{display:flex;gap:10px;flex-shrink:0}
+.consent__btn{
+  font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;
+  padding:10px 20px;border-radius:999px;border:1.5px solid rgba(255,255,255,.28);
+  background:transparent;color:#dbe4f0;transition:background .2s,border-color .2s,color .2s,transform .2s;
+}
+.consent__btn:hover{border-color:#fff;color:#fff;transform:translateY(-1px)}
+.consent__btn--yes{background:linear-gradient(135deg,var(--blue),var(--blue-600));border-color:transparent;color:#fff}
+.consent__btn--yes:hover{box-shadow:0 10px 24px rgba(46,111,209,.4)}
+@media (max-width:560px){
+  .consent{inset-inline:10px;inset-block-end:10px}
+  .consent__inner{padding:14px 16px;gap:12px}
+  .consent__actions{width:100%}
+  .consent__btn{flex:1}
+}
+
 /* founder portrait */
 .founder__photo{width:56px;height:56px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:var(--shadow-sm)}
 

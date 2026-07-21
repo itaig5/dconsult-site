@@ -23,8 +23,8 @@
     "hero.cta2": "לשירותים שלנו",
     "hero.stat1": "גידול ממוצע בהכנסות",
     "hero.stat2": "פתרון דיגיטלי",
-    "hero.stat3num": "4 אזורים",
-    "hero.stat3": "ארה\"ב · אירופה · המזה\"ת · אסיה",
+    "hero.stat3num": "ישראל ואירופה",
+    "hero.stat3": "נכסים שאנו מלווים",
     "hero.card.label": "הכנסות · הרבעון הנוכחי",
     "hero.card.direct": "ישיר",
 
@@ -103,7 +103,7 @@
     "results.h2": "תוצאות שמדברות בעד עצמן.",
     "results.s1": "גידול ממוצע בהכנסות",
     "results.s2": "כיסוי דיגיטלי",
-    "results.s3": "שווקים: ארה״ב · אירופה · המזה״ת · אסיה",
+    "results.s3": "שווקים שאנו פועלים בהם",
     "results.s4": "פועלים מאז",
 
     "contact.kicker": "צור קשר",
@@ -119,7 +119,11 @@
 
     "footer.tag": "מפתחים אסטרטגיות חדשניות · משיגים תוצאות",
     "footer.rights": "כל הזכויות שמורות.",
-    "footer.privacy": "מדיניות פרטיות"
+    "footer.privacy": "מדיניות פרטיות",
+
+    "consent.text": "אנחנו משתמשים בעוגיות אנליטיקס כדי להבין איך משתמשים באתר. בלי פרסום ובלי מכירת מידע. ראו את <a href=\"privacy.html\">מדיניות הפרטיות</a>.",
+    "consent.accept": "אישור",
+    "consent.decline": "דחייה"
   };
 
   var STATUS = {
@@ -211,6 +215,36 @@
       }, { rootMargin: "-45% 0px -50% 0px" });
       secs.forEach(function (s) { io.observe(s); });
     }
+
+    /* cookie consent — GA4 loads only after an explicit "accept" */
+    (function () {
+      var box = document.getElementById("consent");
+      if (!box) return;
+      var KEY = "dc_consent", choice = null;
+      try { choice = localStorage.getItem(KEY); } catch (e) {}
+
+      function loadGA() {
+        if (!window.DC_GA_ID || window.__dcGaLoaded) return;
+        window.__dcGaLoaded = true;
+        var s = document.createElement("script");
+        s.async = true;
+        s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.DC_GA_ID;
+        document.head.appendChild(s);
+        gtag("js", new Date());
+        gtag("config", window.DC_GA_ID, { anonymize_ip: true });
+      }
+      function decide(v) {
+        try { localStorage.setItem(KEY, v); } catch (e) {}
+        box.hidden = true;
+        if (v === "yes") loadGA();
+      }
+
+      if (choice === "yes") loadGA();
+      else if (choice !== "no") box.hidden = false;
+
+      document.getElementById("consentYes").addEventListener("click", function () { decide("yes"); });
+      document.getElementById("consentNo").addEventListener("click", function () { decide("no"); });
+    })();
 
     /* contact form: Formspree if configured, else mailto fallback */
     var form = document.getElementById("contactForm");
