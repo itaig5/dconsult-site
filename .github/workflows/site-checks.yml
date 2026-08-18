@@ -1,0 +1,67 @@
+# blog/build.py carries the checks that keep this site indexable — it refuses to
+# write a ?lang= hreflang cluster into any page, and it refuses to silently drop
+# a post that cannot be built. None of that ran anywhere: GitHub Pages publishes
+# what is pushed and never executes this script, so until this workflow existed
+# the guards only fired when a human happened to run the build locally, and the
+# two files they protect (index.html, privacy.html) are the two nobody needs the
+# build to edit. A guard nothing runs is not a guard.
+#
+# It also pins the second invariant: the generated files in the repo must be what
+# the current sources produce. Editing a blog page by hand, or changing build.py
+# without rebuilding, now shows up as a red X instead of as silent drift that
+# surfaces months later in Search Console.
+name: site checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-is-current:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # build.py reads git history to date each <lastmod>. actions/checkout
+          # defaults to fetch-depth 1, and in a shallow clone `git log` reports
+          # the one fetched commit for every path — every page would come out as
+          # changed today and the sitemap would quietly go back to lying.
+          # build.py detects shallow and omits <lastmod> rather than guess, so
+          # the symptom here would be a spurious red X, not a bad sitemap.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install markdown
+
+      # Exits non-zero on a ?lang= hreflang cluster in any guarded page, or on a
+      # post that could not be built. Writes nothing when it fails.
+      - name: build (runs the indexing guards)
+        run: python3 blog/build.py
+
+      - name: generated files must match their sources
+        run: |
+          # Dates are compared out, and this is not laziness. <lastmod>,
+          # dateModified and lastBuildDate are derived from commit metadata, so
+          # they cannot be a fixed point: the value build.py writes BEFORE a
+          # commit is by definition not the value it computes AFTER that commit
+          # exists. A plain `git diff --exit-code` therefore goes red on every
+          # push, and redder still whenever a build straddles midnight — which
+          # is exactly how it failed the first time it was tried. The dates are
+          # guaranteed correct at the moment a human builds and commits; what
+          # this step guarantees is that nothing ELSE drifted.
+          strip='s#<lastmod>[^<]*</lastmod>##; s#"dateModified": "[^"]*"#"dateModified": ""#; s#<lastBuildDate>[^<]*</lastBuildDate>##'
+          fail=0
+          for f in $(git diff --name-only); do
+            if ! diff -q <(git show "HEAD:$f" | sed -E "$strip") \
+                         <(sed -E "$strip" "$f") >/dev/null; then
+              echo "::error file=$f::generated file does not match its source. Run: python3 blog/build.py"
+              fail=1
+            fi
+          done
+          exit $fail

@@ -6,9 +6,20 @@
 <title>D Consulting — Revenue Management & Distribution for Hospitality</title>
 <meta name="description" content="D Consulting is a revenue-management, distribution and travel-tech consultancy for the hospitality industry. We help hotels and vacation rentals turn online channels into measurable revenue growth.">
 <link rel="canonical" href="https://dconsult.me/">
-<link rel="alternate" hreflang="en" href="https://dconsult.me/?lang=en">
-<link rel="alternate" hreflang="he" href="https://dconsult.me/?lang=he">
-<link rel="alternate" hreflang="x-default" href="https://dconsult.me/">
+<!-- No hreflang here on purpose. Language is switched client-side with ?lang=,
+     so /?lang=en and /?lang=he return byte-identical HTML and both canonicalise
+     to "/". hreflang alternates must be canonical URLs in their own right, so
+     that cluster was invalid and Google discarded it. Note what this does NOT
+     do: the ?lang= URLs are still linked from the blog pages and still get
+     crawled — the canonical above is what consolidates them, and it always was.
+     Removing the cluster withdraws a false declaration; it does not remove a
+     URL. The accepted cost is that "/" now carries no Hebrew signal at all,
+     which is the right trade for a page whose Hebrew has no address of its own.
+     The blog POSTS do have real per-language URLs (-he.html), so they keep
+     their hreflang and it is valid there.
+     blog/build.py::check_no_lang_hreflang() fails the build if this comes back,
+     and .github/workflows/site-checks.yml runs that build on every push — so
+     this is enforced, not merely documented. -->
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">

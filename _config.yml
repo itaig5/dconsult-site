@@ -1,0 +1,33 @@
+# GitHub Pages runs Jekyll on this repo whether or not we ask it to, and without
+# this file it publishes the SOURCES alongside the site:
+#
+#   blog/posts/*.md  ->  /blog/posts/<name>.html
+#       Jekyll rendered each source post as its own page, in the default theme,
+#       carrying a self-referencing canonical and full SEO markup. Every article
+#       therefore existed twice, and the copy claimed to be the original.
+#   /blog/posts       ->  301 to /blog/posts/, which is a 404.
+#   README.md, serve.js, blog/build.py were served verbatim.
+#
+# None of it is linked, but "unlinked" is not "unreachable" — Google found the
+# property through the domain, not through our nav. Excluding them makes those
+# URLs 404, which is what actually removes them from the index. Do NOT also
+# Disallow them in robots.txt: a URL that cannot be crawled cannot be seen to be
+# gone, so it lingers in the index instead of dropping out.
+#
+# The site itself is hand-built by blog/build.py and served as plain files;
+# Jekyll only copies it. Keep it that way.
+#
+# Setting `exclude` REPLACES Jekyll's defaults rather than adding to them. That
+# is fine here — none of what they cover (Gemfile, vendor/*, .sass-cache/,
+# node_modules/) exists in this repo, and if it ever did, this build method
+# would already have been replaced by something else.
+#
+# `blog/posts` is matched as a prefix, not as a path, so it would also swallow a
+# future blog/posts-archive/. Do not "fix" that with a trailing slash — that
+# stops matching the directory entry itself. Just don't name a sibling with
+# `blog/posts` as its prefix.
+exclude:
+  - README.md
+  - serve.js
+  - blog/build.py
+  - blog/posts
