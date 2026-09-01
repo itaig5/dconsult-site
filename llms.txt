@@ -1,7 +1,7 @@
 # D Consulting
 
-> Revenue management, online distribution and travel-tech consultancy for the
-> hospitality industry. We help hotels and accommodation providers turn online
+> Revenue management, online distribution and travel-tech consultancy for
+> hotels and vacation rentals. We help accommodation providers turn online
 > sales channels into measurable revenue growth. Founded 2016, based in
 > Tel Aviv-Yafo, Israel; clients across Israel and Europe.
 
@@ -28,7 +28,7 @@ Contact: itai@dconsult.me · +972-52-889-5995
 
 ## Pages
 - [Home](https://dconsult.me/): services, approach, platform and results
-- [Insights (blog)](https://dconsult.me/blog/): articles on hospitality distribution and revenue
+- [Insights (blog)](https://dconsult.me/blog/): articles on hotel distribution and revenue
 - [Privacy policy](https://dconsult.me/privacy.html)
 - [RSS feed](https://dconsult.me/blog/feed.xml)
 

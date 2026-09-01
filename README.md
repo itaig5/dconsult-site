@@ -1,6 +1,6 @@
 # D Consulting — website
 
-Bilingual (English / Hebrew, with RTL) marketing site for **D Consulting** — a revenue-management, distribution and travel-tech consultancy for the hospitality industry. Plain static HTML/CSS/JS, deployed via **GitHub Pages** at **https://dconsult.me**.
+Bilingual (English / Hebrew, with RTL) marketing site for **D Consulting** — a revenue-management, distribution and travel-tech consultancy for hotels and vacation rentals. Plain static HTML/CSS/JS, deployed via **GitHub Pages** at **https://dconsult.me**.
 
 ## Local preview
 ```bash

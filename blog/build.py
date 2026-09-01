@@ -59,7 +59,7 @@ INDEX_HREFLANG_NOTE = (
 UI = {
     "en": {
         "back": "← All articles", "home": "← Back to site", "blog": "Insights",
-        "kicker": "Insights", "title": "Notes from the front line of hospitality distribution.",
+        "kicker": "Insights", "title": "Notes from the front line of hotel distribution.",
         "sub": "What we're seeing in the market, in the channels, and in the data — written for people who run properties.",
         "empty": "First articles coming shortly.", "read": "Read article",
         "min": "min read", "by": "By",
@@ -331,7 +331,7 @@ def build_article(p, alts=None):
         "inLanguage": p["lang"],
         "image": [f"{SITE}/{p['image']}" if p["image"] else f"{SITE}/assets/og.jpg"],
         "keywords": ", ".join(p["tags"]),
-        "articleSection": p["tags"][0] if p["tags"] else "Hospitality",
+        "articleSection": p["tags"][0] if p["tags"] else "Hotels",
         "wordCount": p["words"],
         "author": {
             "@type": "Person",
@@ -495,7 +495,7 @@ def build_feed(posts):
 <rss version="2.0"><channel>
     <title>D Consulting — Insights</title>
     <link>{SITE}/blog/</link>
-    <description>Revenue management, distribution and travel-tech insight for hospitality.</description>
+    <description>Revenue management, distribution and travel-tech insight for hotels and vacation rentals.</description>
     <lastBuildDate>{now}</lastBuildDate>
 {items}</channel></rss>
 """
@@ -623,8 +623,8 @@ def build_llms(posts):
     ) or "- (no articles yet)"
     return f"""# D Consulting
 
-> Revenue management, online distribution and travel-tech consultancy for the
-> hospitality industry. We help hotels and accommodation providers turn online
+> Revenue management, online distribution and travel-tech consultancy for
+> hotels and vacation rentals. We help accommodation providers turn online
 > sales channels into measurable revenue growth. Founded 2016, based in
 > Tel Aviv-Yafo, Israel; clients across Israel and Europe.
 
@@ -651,7 +651,7 @@ Contact: itai@dconsult.me · +972-52-889-5995
 
 ## Pages
 - [Home]({SITE}/): services, approach, platform and results
-- [Insights (blog)]({SITE}/blog/): articles on hospitality distribution and revenue
+- [Insights (blog)]({SITE}/blog/): articles on hotel distribution and revenue
 - [Privacy policy]({SITE}/privacy.html)
 - [RSS feed]({SITE}/blog/feed.xml)
 
