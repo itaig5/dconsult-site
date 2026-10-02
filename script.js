@@ -12,6 +12,7 @@
     "nav.services": "שירותים",
     "nav.platform": "הפלטפורמה",
     "nav.blog": "תובנות",
+    "nav.jobs": "דרושים",
     "nav.approach": "הגישה",
     "nav.results": "תוצאות",
     "nav.contact": "צור קשר",
@@ -152,6 +153,9 @@
       var k = el.getAttribute("data-i18n");
       var v = (lang === "he") ? (HE[k] != null ? HE[k] : EN[k]) : EN[k];
       if (v != null) el.innerHTML = v;
+    });
+    [].slice.call(document.querySelectorAll(".js-jobs")).forEach(function (a) {
+      a.setAttribute("href", lang === "he" ? "jobs/analyst/" : "jobs/analyst/en.html");
     });
     var html = document.documentElement;
     html.setAttribute("lang", lang);

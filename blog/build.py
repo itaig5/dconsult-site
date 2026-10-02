@@ -64,7 +64,7 @@ UI = {
         "empty": "First articles coming shortly.", "read": "Read article",
         "min": "min read", "by": "By",
         "n_about": "About", "n_services": "Services", "n_platform": "Platform",
-        "n_approach": "Approach", "n_insights": "Insights", "n_contact": "Contact",
+        "n_approach": "Approach", "n_insights": "Insights", "n_jobs": "Careers", "n_contact": "Contact",
         "n_cta": "Let's talk", "other": "עברית",
     },
     "he": {
@@ -74,7 +74,7 @@ UI = {
         "empty": "המאמרים הראשונים יעלו בקרוב.", "read": "לקריאת המאמר",
         "min": "דק' קריאה", "by": "מאת",
         "n_about": "אודות", "n_services": "שירותים", "n_platform": "הפלטפורמה",
-        "n_approach": "הגישה", "n_insights": "תובנות", "n_contact": "צור קשר",
+        "n_approach": "הגישה", "n_insights": "תובנות", "n_jobs": "דרושים", "n_contact": "צור קשר",
         "n_cta": "דברו איתנו", "other": "English",
     },
 }
@@ -198,6 +198,7 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
     )
     # keep the visitor's language when they head back to the main site
     home = "../?lang=he" if lang == "he" else "../"
+    jobs = "../jobs/analyst/" if lang == "he" else "../jobs/analyst/en.html"
 
     def _nl(href, key, cls=""):
         c = f' class="{cls}"' if cls else ""
@@ -210,6 +211,7 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
         _nl(f"{home}#platform", "n_platform"),
         _nl(f"{home}#approach", "n_approach"),
         _nl("./", "n_insights", "active"),
+        _nl(jobs, "n_jobs"),
         _nl(f"{home}#contact", "n_contact"),
     ])
     cta = _nl(f"{home}#contact", "n_cta", "btn btn--sm btn--primary")
@@ -284,6 +286,7 @@ def foot(lang):
       <a href="../#services">{html.escape(u['n_services'])}</a>
       <a href="../#platform">{html.escape(u['n_platform'])}</a>
       <a href="./">{html.escape(u['n_insights'])}</a>
+      <a href="{'../jobs/analyst/' if lang == 'he' else '../jobs/analyst/en.html'}">{html.escape(u['n_jobs'])}</a>
       <a href="../#contact">{html.escape(u['n_contact'])}</a>
     </nav>
   </div>

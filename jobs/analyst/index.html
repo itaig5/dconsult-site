@@ -95,6 +95,26 @@
       background: var(--bg-soft);
     }
 
+    .top-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .site-link {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .site-link:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
     .header-logo {
       display: block;
       width: 220px;
@@ -435,8 +455,11 @@
 
       <header>
         <div class="top-row">
-          <img src="https://dconsult.me/assets/logo-light.png" alt="D Consulting" class="header-logo">
-          <a class="lang-switch" href="en.html" hreflang="en" lang="en">English</a>
+          <a href="/?lang=he" aria-label="D Consulting"><img src="https://dconsult.me/assets/logo-light.png" alt="D Consulting" class="header-logo"></a>
+          <div class="top-links">
+            <a class="site-link" href="/?lang=he">לאתר D Consulting</a>
+            <a class="lang-switch" href="en.html" hreflang="en" lang="en">English</a>
+          </div>
         </div>
         <h1>אנליסט/ית ניהול תשואה והפצה למלונות</h1>
 
@@ -559,9 +582,9 @@
       </section>
 
       <footer class="page-footer">
-        <img src="https://dconsult.me/assets/logo-light.png" alt="D Consulting" class="footer-logo">
+        <a href="/?lang=he" aria-label="D Consulting"><img src="https://dconsult.me/assets/logo-light.png" alt="D Consulting" class="footer-logo"></a>
         <div class="footer-contact">
-          <a href="mailto:itai@dconsult.me">itai@dconsult.me</a> · <a href="https://dconsult.me" target="_blank" rel="noopener">dconsult.me</a>
+          <a href="mailto:itai@dconsult.me">itai@dconsult.me</a> · <a href="/?lang=he">dconsult.me</a>
         </div>
       </footer>
 
