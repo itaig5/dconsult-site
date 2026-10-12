@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>D Consulting — Revenue Management & Distribution for Hotels & Vacation Rentals</title>
+<title>D Consulting | Revenue Management & Distribution for Hotels & Vacation Rentals</title>
 <meta name="description" content="D Consulting is a revenue-management, distribution and travel-tech consultancy for hotels and vacation rentals. We help accommodation providers turn online channels into measurable revenue growth.">
 <link rel="canonical" href="https://dconsult.me/">
 <!-- No hreflang here on purpose. Language is switched client-side with ?lang=,
@@ -11,19 +11,19 @@
      to "/". hreflang alternates must be canonical URLs in their own right, so
      that cluster was invalid and Google discarded it. Note what this does NOT
      do: the ?lang= URLs are still linked from the blog pages and still get
-     crawled — the canonical above is what consolidates them, and it always was.
+     crawled; the canonical above is what consolidates them, and it always was.
      Removing the cluster withdraws a false declaration; it does not remove a
      URL. The accepted cost is that "/" now carries no Hebrew signal at all,
      which is the right trade for a page whose Hebrew has no address of its own.
      The blog POSTS do have real per-language URLs (-he.html), so they keep
      their hreflang and it is valid there.
      blog/build.py::check_no_lang_hreflang() fails the build if this comes back,
-     and .github/workflows/site-checks.yml runs that build on every push — so
+     and .github/workflows/site-checks.yml runs that build on every push, so
      this is enforced, not merely documented. -->
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="D Consulting — Developing Innovative Strategies, Achieving Success">
+<meta property="og:title" content="D Consulting | Developing Innovative Strategies, Achieving Success">
 <meta property="og:description" content="Revenue management, distribution & travel-tech for hotels and vacation rentals. Clients see an average +25% revenue growth.">
 <meta property="og:url" content="https://dconsult.me/">
 <meta property="og:image" content="https://dconsult.me/assets/og.jpg">
@@ -33,7 +33,7 @@
 <link rel="icon" type="image/png" href="assets/icon-512.png">
 <link rel="apple-touch-icon" href="assets/icon-512.png">
 
-<!-- Google Analytics 4 — deliberately NOT loaded here.
+<!-- Google Analytics 4: deliberately NOT loaded here.
      It is injected by script.js only after the visitor accepts analytics cookies (GDPR). -->
 <script>
   window.DC_GA_ID = "G-7FGVV9022J";
@@ -44,10 +44,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
-<link rel="alternate" type="application/rss+xml" title="D Consulting — Insights" href="https://dconsult.me/blog/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="D Consulting Insights" href="https://dconsult.me/blog/feed.xml">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extras.css">
 </head>
-<body>
+<body data-post="(home)">
 
 <!-- ============ NAV ============ -->
 <header class="nav" id="nav">
@@ -90,7 +91,7 @@
     </div>
     <div class="container hero__inner">
       <div class="hero__copy">
-        <p class="eyebrow" data-i18n="hero.eyebrow">Developing innovative strategies — achieving success</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Developing innovative strategies · achieving success</p>
         <h1 class="hero__title" data-i18n="hero.title">More revenue from every channel.</h1>
         <p class="hero__lead" data-i18n="hero.lead">D Consulting is a revenue-management, distribution and travel-tech consultancy for hotels and vacation rentals. We combine deep market understanding with proprietary technology to help accommodation providers lead the digital world.</p>
         <div class="hero__cta">
@@ -130,10 +131,10 @@
       </div>
       <div class="about__body">
         <div class="about__text">
-          <p data-i18n="about.p1">Since 2016, D Consulting has been a leading business-development and innovation company for hotels and vacation rentals — helping accommodation providers turn online sales channels into a real, measurable growth engine.</p>
-          <p data-i18n="about.p2">Our approach blends bespoke solutions, tailored to each client, with the knowledge and experience to deliver the best results. We're an integral part of your marketing team — from strategy down to execution — with fast, hands-on answers to every question.</p>
+          <p data-i18n="about.p1">Since 2016, D Consulting has been a leading business-development and innovation company for hotels and vacation rentals, helping accommodation providers turn online sales channels into a real, measurable growth engine.</p>
+          <p data-i18n="about.p2">Our approach blends bespoke solutions, tailored to each client, with the knowledge and experience to deliver the best results. We're an integral part of your marketing team, from strategy down to execution, with fast, hands-on answers to every question.</p>
           <p data-i18n="about.p3">What drives us is the desire to change the status quo: creative thinking and constant learning. Over the years we've developed a range of unique methods and proprietary tools, built on a deep understanding of online distribution and consumer behaviour, combined with intimate knowledge of the local market.</p>
-          <p class="about__highlight" data-i18n="about.p4">We're the only company offering a true 360° solution for digital marketing in tourism — and the results speak for themselves.</p>
+          <p class="about__highlight" data-i18n="about.p4">We're the only company offering a true 360° solution for digital marketing in tourism, and the results speak for themselves.</p>
         </div>
         <aside class="about__aside">
           <div class="founder">
@@ -160,7 +161,7 @@
       <div class="section__head">
         <p class="kicker" data-i18n="services.kicker">What we do</p>
         <h2 class="h2" data-i18n="services.h2">Services</h2>
-        <p class="section__sub" data-i18n="services.sub">A 360° solution — choose the modules you need, or let us run it end-to-end.</p>
+        <p class="section__sub" data-i18n="services.sub">A 360° solution: choose the modules you need, or let us run it end-to-end.</p>
       </div>
       <div class="cards">
         <article class="card">
@@ -168,14 +169,14 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/></svg>
           </span>
           <h3 class="card__title" data-i18n="svc.1.t">Online Distribution &amp; Channel Setup</h3>
-          <p class="card__desc" data-i18n="svc.1.d">Build and optimise your presence across Booking.com, Airbnb, Expedia and more — profile setup, content, rate plans and full sync to your PMS / channel manager.</p>
+          <p class="card__desc" data-i18n="svc.1.d">Build and optimise your presence across Booking.com, Airbnb, Expedia and more: profile setup, content, rate plans and full sync to your PMS / channel manager.</p>
         </article>
         <article class="card">
           <span class="card__icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19V9M9 19V5M14 19v-6M19 19v-9"/><path d="M3 19h18"/></svg>
           </span>
           <h3 class="card__title" data-i18n="svc.2.t">Revenue Management &amp; Pricing</h3>
-          <p class="card__desc" data-i18n="svc.2.d">Yield management and a full pricing strategy per channel and audience — factoring rates, occupancy, reputation and budget to maximise profit.</p>
+          <p class="card__desc" data-i18n="svc.2.d">Yield management and a full pricing strategy per channel and audience, factoring rates, occupancy, reputation and budget to maximise profit.</p>
         </article>
         <article class="card">
           <span class="card__icon" aria-hidden="true">
@@ -230,7 +231,7 @@
       <div class="section__head section__head--center">
         <p class="kicker" data-i18n="platform.kicker">Proprietary technology</p>
         <h2 class="h2" data-i18n="platform.h2">We couldn't find the tools we needed. So we built them.</h2>
-        <p class="section__sub" data-i18n="platform.sub">Most consultancies work with whatever the market hands them. We kept hitting the same limits — so we built our own systems. They learn from every property, every week, and get sharper the longer they run.</p>
+        <p class="section__sub" data-i18n="platform.sub">Most consultancies work with whatever the market hands them. We kept hitting the same limits, so we built our own systems. They learn from every property, every week, and get sharper the longer they run.</p>
       </div>
 
       <div class="tools">
@@ -246,12 +247,12 @@
           <div class="tool__body">
             <span class="tool__tag">Pacer</span>
             <h3 class="tool__title" data-i18n="tool.1.t">Revenue management that learns.</h3>
-            <p class="tool__desc" data-i18n="tool.1.d">A self-learning revenue system that forecasts demand and recommends pricing for every property, every week — then audits its own recommendations to find where it was wrong.</p>
+            <p class="tool__desc" data-i18n="tool.1.d">A self-learning revenue system that forecasts demand and recommends pricing for every property, every week, then audits its own recommendations to find where it was wrong.</p>
             <ul class="tool__points">
-              <li data-i18n="tool.1.p1"><b>Forecasts from your own history</b> — pickup curves built per property from multi-year on-the-books data, not generic market averages.</li>
-              <li data-i18n="tool.1.p2"><b>Regime-aware</b> — it re-weights seasons when the market shifts, so one disrupted year doesn't poison the model.</li>
-              <li data-i18n="tool.1.p3"><b>It critiques itself</b> — a dedicated audit layer scores past recommendations and recalibrates automatically.</li>
-              <li data-i18n="tool.1.p4"><b>Runs on schedule</b> — the weekly pipeline runs in the cloud and arrives as a decision-ready dashboard.</li>
+              <li data-i18n="tool.1.p1"><b>Forecasts from your own history:</b> pickup curves built per property from multi-year on-the-books data, not generic market averages.</li>
+              <li data-i18n="tool.1.p2"><b>Regime-aware:</b> it re-weights seasons when the market shifts, so one disrupted year doesn't poison the model.</li>
+              <li data-i18n="tool.1.p3"><b>It critiques itself:</b> a dedicated audit layer scores past recommendations and recalibrates automatically.</li>
+              <li data-i18n="tool.1.p4"><b>Runs on schedule:</b> the weekly pipeline runs in the cloud and arrives as a decision-ready dashboard.</li>
             </ul>
           </div>
         </article>
@@ -269,10 +270,10 @@
             <h3 class="tool__title" data-i18n="tool.2.t">Your booking history already holds the answers.</h3>
             <p class="tool__desc" data-i18n="tool.2.d">Reservation analytics that reads an export from virtually any property-management system or channel, and turns it into the picture most owners never get to see.</p>
             <ul class="tool__points">
-              <li data-i18n="tool.2.p1"><b>Source-agnostic</b> — it detects the format and normalises it, so data from different systems finally becomes comparable.</li>
-              <li data-i18n="tool.2.p2"><b>The questions that matter</b> — channel mix, lead time, length of stay, room-type performance and seasonality.</li>
-              <li data-i18n="tool.2.p3"><b>Cancellations, quantified</b> — where revenue is actually lost, by channel and by booking window.</li>
-              <li data-i18n="tool.2.p4"><b>Runs in your browser</b> — the analysis happens on your machine; the data doesn't go anywhere.</li>
+              <li data-i18n="tool.2.p1"><b>Source-agnostic:</b> it detects the format and normalises it, so data from different systems finally becomes comparable.</li>
+              <li data-i18n="tool.2.p2"><b>The questions that matter:</b> channel mix, lead time, length of stay, room-type performance and seasonality.</li>
+              <li data-i18n="tool.2.p3"><b>Cancellations, quantified:</b> where revenue is actually lost, by channel and by booking window.</li>
+              <li data-i18n="tool.2.p4"><b>Runs in your browser:</b> the analysis happens on your machine; the data doesn't go anywhere.</li>
             </ul>
           </div>
         </article>
@@ -297,13 +298,13 @@
           </div>
           <div class="tool__body">
             <span class="tool__tag" data-i18n="tool.3.tag">Automated reporting</span>
-            <h3 class="tool__title" data-i18n="tool.3.t">Every client, the same discipline — every week.</h3>
+            <h3 class="tool__title" data-i18n="tool.3.t">Every client, the same discipline, every week.</h3>
             <p class="tool__desc" data-i18n="tool.3.d">Weekly pace reports and monthly deep-dives are assembled automatically from live data, then reviewed by a human before they reach you. Consistency is the product.</p>
             <ul class="tool__points">
-              <li data-i18n="tool.3.p1"><b>Weekly pace</b> — where the month stands against target, and exactly what changed since last week.</li>
-              <li data-i18n="tool.3.p2"><b>Monthly deep-dive</b> — channel performance, room-type mix and commission, reconciled to the source data.</li>
-              <li data-i18n="tool.3.p3"><b>Written to be read</b> — the numbers arrive with the narrative, not as a raw spreadsheet.</li>
-              <li data-i18n="tool.3.p4"><b>Reviewed, never blind-sent</b> — automation does the assembly; the judgement stays human.</li>
+              <li data-i18n="tool.3.p1"><b>Weekly pace:</b> where the month stands against target, and exactly what changed since last week.</li>
+              <li data-i18n="tool.3.p2"><b>Monthly deep-dive:</b> channel performance, room-type mix and commission, reconciled to the source data.</li>
+              <li data-i18n="tool.3.p3"><b>Written to be read:</b> the numbers arrive with the narrative, not as a raw spreadsheet.</li>
+              <li data-i18n="tool.3.p4"><b>Reviewed, never blind-sent:</b> automation does the assembly; the judgement stays human.</li>
             </ul>
           </div>
         </article>
@@ -323,12 +324,12 @@
         <li class="step">
           <span class="step__num">01</span>
           <h3 class="step__title" data-i18n="step.1.t">Understand</h3>
-          <p class="step__desc" data-i18n="step.1.d">We learn your property, market, guest mix and goals — and build a detailed marketing and revenue plan with a budget.</p>
+          <p class="step__desc" data-i18n="step.1.d">We learn your property, market, guest mix and goals, and build a detailed marketing and revenue plan with a budget.</p>
         </li>
         <li class="step">
           <span class="step__num">02</span>
           <h3 class="step__title" data-i18n="step.2.t">Build</h3>
-          <p class="step__desc" data-i18n="step.2.d">We set up and connect your channels, content, pricing and technology — a professional, synced presence from day one.</p>
+          <p class="step__desc" data-i18n="step.2.d">We set up and connect your channels, content, pricing and technology: a professional, synced presence from day one.</p>
         </li>
         <li class="step">
           <span class="step__num">03</span>
@@ -338,7 +339,7 @@
         <li class="step">
           <span class="step__num">04</span>
           <h3 class="step__title" data-i18n="step.4.t">Report &amp; grow</h3>
-          <p class="step__desc" data-i18n="step.4.d">Weekly reporting, monthly deep-dives and joint work with every relevant stakeholder — always aligned to the strategy.</p>
+          <p class="step__desc" data-i18n="step.4.d">Weekly reporting, monthly deep-dives and joint work with every relevant stakeholder, always aligned to the strategy.</p>
         </li>
       </ol>
     </div>
@@ -366,7 +367,7 @@
     <div class="container">
       <figure class="quote">
         <span class="quote__mark" aria-hidden="true">&ldquo;</span>
-        <blockquote class="quote__text" data-i18n="quote.text">Starting to work with Itai increased our revenue by at least 25%. His attention to detail and knowledge of the hospitality market make him special as a revenue and digital marketing manager. Itai, with your hard work and great personal service, you are an asset to any team — and an absolute pleasure to work with.</blockquote>
+        <blockquote class="quote__text" data-i18n="quote.text">Starting to work with Itai increased our revenue by at least 25%. His attention to detail and knowledge of the hospitality market make him special as a revenue and digital marketing manager. Itai, with your hard work and great personal service, you are an asset to any team, and an absolute pleasure to work with.</blockquote>
         <figcaption class="quote__who">
           <span class="quote__name">Raed A. Leil</span>
           <span class="quote__role" data-i18n="quote.role">Hotel General Manager · YMCA Three Arches</span>
@@ -381,7 +382,7 @@
       <div class="contact__intro">
         <p class="kicker" data-i18n="contact.kicker">Contact</p>
         <h2 class="h2" data-i18n="contact.h2">Let's grow your revenue.</h2>
-        <p class="contact__sub" data-i18n="contact.sub">Tell us about your property and goals — we'll get back within one business day.</p>
+        <p class="contact__sub" data-i18n="contact.sub">Tell us about your property and goals, and we'll get back within one business day.</p>
 
         <ul class="contact__list">
           <li>
@@ -401,6 +402,28 @@
           <a class="btn btn--wa" href="https://wa.me/972528895995" target="_blank" rel="noopener" data-i18n="contact.wa">Chat on WhatsApp</a>
           <a class="iconbtn" href="https://www.linkedin.com/company/d-consulting-israel/" target="_blank" rel="noopener" aria-label="D Consulting on LinkedIn" data-social="linkedin">in</a>
           <a class="iconbtn" href="https://www.facebook.com/dconsultingtravel" target="_blank" rel="noopener" aria-label="D Consulting on Facebook" data-social="facebook">f</a>
+        </div>
+
+        <!-- the secondary ask for visitors not ready for a call (P2-8): the same
+             one-field form as the blog. extras.js posts it; script.js keeps its
+             mailing language and consent version in step with the page language. -->
+        <div class="contact__subscribe">
+          <h3 class="contact__subscribe-title" data-i18n="sub.title">Not ready for a call?</h3>
+          <form class="subform" id="sf-home" action="https://script.google.com/macros/s/AKfycbw1tjFNa6dotgBkJpKJhEc2YiJhmEP4S5d2hs0eMZj7iPAMEdsbx7KnRgFQcQfiSDDGhQ/exec" method="post" data-subscribe data-slug="(home)">
+            <p class="subform__lead" data-i18n="sub.lead">Get one new analysis by email, about every two weeks.</p>
+            <div class="subform__row">
+              <label class="vh" for="sf-home-email" data-i18n="sub.label">Your email address</label>
+              <input class="subform__input" id="sf-home-email" name="email" type="email" autocomplete="email" required placeholder="Your email address">
+              <button class="btn btn--primary subform__btn" type="submit" data-i18n="sub.btn">Subscribe</button>
+            </div>
+            <input type="hidden" name="lang" value="en">
+            <input type="hidden" name="page" value="https://dconsult.me/">
+            <input type="hidden" name="consent_version" value="en-1">
+            <input type="hidden" name="redirect" value="1">
+            <div class="vh" aria-hidden="true"><label>Leave this field empty <input type="text" name="hp" value="" tabindex="-1" autocomplete="off"></label></div>
+            <p class="subform__consent" data-i18n="sub.consent">Subscribing is voluntary; without an email address you won't receive the updates. About every two weeks you'll get a new post and, now and then, promotional updates about D Consulting's services. The list is managed by Itai Gal (itai@dconsult.me). Resend stores it in the USA, and Google stores the record of your consent. You can see and correct your details, and every email has an unsubscribe link. The rest is in the <a href="privacy.html?lang=en#email-updates">privacy policy</a>.</p>
+            <p class="subform__status" role="status" aria-live="polite"></p>
+          </form>
         </div>
       </div>
 
@@ -486,5 +509,6 @@
 </script>
 
 <script src="script.js"></script>
+<script src="extras.js"></script>
 </body>
 </html>

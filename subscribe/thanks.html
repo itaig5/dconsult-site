@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You&#x27;re subscribed | D Consulting</title>
+<!-- A step in the email-updates sign-up, reached only from the endpoint's
+     redirect or a form without JS. Not a page for search results. -->
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="../assets/icon-512.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700&family=Heebo:wght@400;600;700&family=Frank+Ruhl+Libre:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../extras.css">
+</head>
+<body>
+
+<div class="legalbar">
+  <div class="container legalbar__inner">
+    <a href="../" aria-label="D Consulting home"><img src="../assets/logo-dark.png" alt="D Consulting"></a>
+  </div>
+</div>
+
+<main class="notice">
+  <h1>You&#x27;re subscribed</h1>
+  <p>Thank you for confirming. New posts will reach you about every two weeks, and every email has an unsubscribe link.</p>
+  <div class="notice__actions">
+    <a class="btn btn--primary" href="../blog/">Read the articles</a>
+    <a class="btn btn--line" href="../">Back to the site</a>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container footer__bottom" style="border:0">
+    <span>&copy; <span id="year">2026</span> D Consulting.</span>
+    <a class="footer__privacy" href="../privacy.html?lang=en">Privacy</a>
+  </div>
+</footer>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

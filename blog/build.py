@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-D Consulting — blog build.
+D Consulting: blog build.
 
 Reads  blog/posts/*.md   (front-matter + markdown)
 Writes blog/index.html, blog/<slug>.html, blog/feed.xml,
-       and — at the SITE ROOT, outside blog/ — sitemap.xml and llms.txt
+       and, at the SITE ROOT outside blog/, sitemap.xml and llms.txt
 
 Also VALIDATES three files it does not write: ../index.html, ../privacy.html and
 ../sitemap.xml. A ?lang= hreflang cluster in any of them exits 1 before anything
@@ -12,7 +12,20 @@ is written, so an exit 1 here can be caused by a file outside blog/.
 
 Front-matter keys:
   title, date (YYYY-MM-DD), lang (en|he), tags (comma separated),
-  excerpt, image (optional, path relative to site root), slug (optional)
+  excerpt, image (optional, path relative to site root), slug (optional),
+  image_alt  required when `image` is set: the alt text of the hero image and of
+             og:image. A per-post image with no written alt is refused.
+  modified   optional YYYY-MM-DD. Pins lastmod and dateModified, and shows the
+             visible "Updated" label when it differs from `date`. Set it only on
+             a substantive edit: without it a link-back or a typo fix would move
+             the date (lastmod otherwise follows the post file's last commit).
+
+Environment:
+  SOURCE_DATE=YYYY-MM-DD  pins "today" for the whole build: TODAY, every lastmod
+             that would have been today, and the future-date floor. Two builds
+             with the same SOURCE_DATE on the same tree are byte-identical, which
+             is what lets a preview's regenerated files be compared with the
+             publish build (PHASE2-DECISIONS A13, A20, A22).
 
 This is the target the content agent will write into: drop a .md file in
 posts/, run this, publish. No CMS, no database.
@@ -27,6 +40,7 @@ import subprocess
 import sys
 from datetime import datetime
 from html.parser import HTMLParser
+from urllib.parse import quote
 
 try:
     import markdown as md_lib
@@ -36,15 +50,61 @@ except ImportError:
 HERE = os.path.dirname(os.path.abspath(__file__))
 POSTS_DIR = os.path.join(HERE, "posts")
 SITE = "https://dconsult.me"
-# Local, not UTC, so it lines up with git's `%as` (which is the author's local
-# date). A UTC "today" can name the day before the commit that carries it.
-TODAY = datetime.now().strftime("%Y-%m-%d")
+
+
+def _today():
+    """Today, or SOURCE_DATE when set. Checked, never trusted.
+
+    Local, not UTC, so it lines up with git's `%as` (which is the author's local
+    date). A UTC "today" can name the day before the commit that carries it.
+    A malformed SOURCE_DATE fails the build: a silent fallback to the wall clock
+    would make a "reproducible" build quietly irreproducible.
+    """
+    raw = os.environ.get("SOURCE_DATE", "").strip()
+    if not raw:
+        return datetime.now().strftime("%Y-%m-%d")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw):
+        sys.exit(f"FAIL: SOURCE_DATE={raw!r} is not YYYY-MM-DD. Nothing was written.")
+    try:
+        datetime.strptime(raw, "%Y-%m-%d")
+    except ValueError:
+        sys.exit(f"FAIL: SOURCE_DATE={raw!r} is not a real date. Nothing was written.")
+    return raw
+
+
+TODAY = _today()
+
+# Analytics: the same GA4 property as the homepage, loaded only after the visitor
+# accepts analytics cookies (../extras.js, same consent key as ../script.js).
+GA_ID = "G-7FGVV9022J"
+
+# The subscription endpoint (Apps Script web app, content-engine/endpoint/
+# deployment.json, field web_app_url). Double opt-in happens there.
+SUBSCRIBE_ENDPOINT = ("https://script.google.com/macros/s/"
+                      "AKfycbw1tjFNa6dotgBkJpKJhEc2YiJhmEP4S5d2hs0eMZj7iPAMEdsbx7KnRgFQcQfiSDDGhQ/exec")
+CONSENT_VERSION = {"en": "en-1", "he": "he-1"}
+
+WHATSAPP = "972528895995"
+EMAIL = "itai@dconsult.me"
+LINKEDIN = "https://www.linkedin.com/in/itai-gal/"
+PERSON_ID = f"{SITE}/#itai-gal"
+AUTHOR_PAGE = {"en": "about/itai-gal.html", "he": "about/itai-gal-he.html"}
+# The author block, the author page and the Person JSON-LD all describe Itai.
+# A post by anyone else would get his photo and bio, so it is refused instead.
+KNOWN_AUTHORS = ("Itai Gal", "איתי גל")
+
+MONTHS = {
+    "en": ["January", "February", "March", "April", "May", "June", "July",
+           "August", "September", "October", "November", "December"],
+    "he": ["ינואר", "פברואר", "מרץ", "אפריל", "מאי", "יוני", "יולי",
+           "אוגוסט", "ספטמבר", "אוקטובר", "נובמבר", "דצמבר"],
+}
 
 # blog/index.html has ONE URL. Its language is switched client-side with ?lang=,
 # so /blog/?lang=en and /blog/?lang=he return byte-identical HTML and both
 # canonicalise to /blog/. An hreflang cluster whose members are not canonical
 # URLs in their own right is invalid, so Google discards it. Removing it
-# withdraws a false declaration — it does not remove a URL, because the ?lang=
+# withdraws a false declaration; it does not remove a URL, because the ?lang=
 # links are still in the markup and the canonical is what consolidates them.
 # The accepted cost is that /blog/ now carries no Hebrew targeting signal at all,
 # which is the right trade for a page whose Hebrew has no address of its own.
@@ -60,24 +120,110 @@ UI = {
     "en": {
         "back": "← All articles", "home": "← Back to site", "blog": "Insights",
         "kicker": "Insights", "title": "Notes from the front line of hotel distribution.",
-        "sub": "What we're seeing in the market, in the channels, and in the data — written for people who run properties.",
+        "sub": "What we're seeing in the market, in the channels and in the data. Written for people who run properties.",
         "empty": "First articles coming shortly.", "read": "Read article",
         "min": "min read", "by": "By",
+        "published": "Published ", "updated": "Updated ",
         "n_about": "About", "n_services": "Services", "n_platform": "Platform",
         "n_approach": "Approach", "n_insights": "Insights", "n_jobs": "Careers", "n_contact": "Contact",
         "n_cta": "Let's talk", "other": "עברית",
+        # the fixed asks block (P2-16, P2-13, P2-8; playbook 7)
+        "asks_h": "Want to check this against your property?",
+        "asks_lead": "A free 20-minute introductory conversation about this post's topic and your property.",
+        "btn_email": "Email me",
+        "btn_wa": "Send me a WhatsApp message",
+        "wa_text": "Hi Itai, I read your post: ",
+        "follow": 'You can also <a href="{li}" target="_blank" rel="noopener" data-cta="linkedin">follow me on LinkedIn</a>.',
+        # the subscription form (P2-8, A17)
+        "sub_lead_post": "Not ready to talk? Get one new analysis by email, about every two weeks.",
+        "sub_lead_index": "One new analysis by email, about every two weeks.",
+        "sub_label": "Your email address",
+        "sub_btn": "Subscribe",
+        "hp_label": "Leave this field empty",
+        "consent_line": (
+            "Subscribing is voluntary; without an email address you won't receive the updates. "
+            "About every two weeks you'll get a new post and, now and then, promotional updates "
+            "about D Consulting's services. The list is managed by Itai Gal (itai@dconsult.me). "
+            "Resend stores it in the USA, and Google stores the record of your consent. "
+            "You can see and correct your details, and every email has an unsubscribe link. "
+            'The rest is in the <a href="{privacy}">privacy policy</a>.'
+        ),
+        # the author block
+        "author_name": "Itai Gal", "author_aria": "About the author",
+        "author_bio": (
+            "Founder and CEO of D Consulting, which has worked with hotels and vacation "
+            "rentals in Israel and Europe since 2016. The firm works on revenue management, "
+            "distribution and travel tech, with its own tools: Pacer for revenue management "
+            "and OpenBook for reservation analytics."
+        ),
+        "author_more": "More about Itai",
+        # the analytics consent banner: the homepage's wording (index.html)
+        "cookie_text": ('We use analytics cookies to understand how this site is used. '
+                        'No advertising, no data selling. See our <a href="{privacy}">privacy policy</a>.'),
+        "cookie_yes": "Accept", "cookie_no": "Decline", "cookie_aria": "Cookie consent",
+        "privacy": "Privacy",
     },
     "he": {
         "back": "→ כל המאמרים", "home": "→ חזרה לאתר", "blog": "תובנות",
-        "kicker": "תובנות", "title": "מהשטח של עולם ההפצה והאירוח.",
-        "sub": "מה אנחנו רואים בשוק, בערוצים ובנתונים — נכתב עבור מי שמנהל נכסים בפועל.",
+        "kicker": "תובנות", "title": "מהשטח של עולם האירוח וערוצי המכירה.",
+        "sub": "מה שאנחנו רואים בשוק, בערוצים ובנתונים, למי שמנהל נכסים בפועל.",
         "empty": "המאמרים הראשונים יעלו בקרוב.", "read": "לקריאת המאמר",
         "min": "דק' קריאה", "by": "מאת",
+        "published": "פורסם ב-", "updated": "עודכן ב-",
         "n_about": "אודות", "n_services": "שירותים", "n_platform": "הפלטפורמה",
         "n_approach": "הגישה", "n_insights": "תובנות", "n_jobs": "דרושים", "n_contact": "צור קשר",
         "n_cta": "דברו איתנו", "other": "English",
+        "asks_h": "רוצים לבדוק את זה בנכס שלכם?",
+        "asks_lead": "שיחת היכרות של 20 דקות, ללא עלות, על נושא הפוסט ועל הנכס שלכם.",
+        "btn_wa": "שלחו לי הודעה בוואטסאפ",
+        "btn_email": "שלחו לי מייל",
+        "wa_text": "שלום איתי, קראתי את הפוסט: ",
+        "follow": 'אפשר גם <a href="{li}" target="_blank" rel="noopener" data-cta="linkedin">לעקוב אחריי ב-LinkedIn</a>.',
+        "sub_lead_post": "עוד לא מוכנים לשיחה? אפשר לקבל ניתוח חדש במייל, בערך פעם בשבועיים.",
+        "sub_lead_index": "ניתוח חדש במייל, בערך פעם בשבועיים.",
+        "sub_label": "כתובת המייל שלכם",
+        "sub_btn": "הרשמה לעדכונים",
+        "hp_label": "השאירו את השדה הזה ריק",
+        "consent_line": (
+            "אין חובה להירשם, אבל בלי כתובת מייל לא תקבלו את העדכונים. "
+            "בערך פעם בשבועיים יגיע אליכם פוסט חדש, ומדי פעם גם פרסומת לשירותים של D Consulting. "
+            "את הרשימה מנהל איתי גל, ואפשר לפנות אליו בכתובת itai@dconsult.me. "
+            "הרשימה נשמרת אצל Resend בארה\"ב, ותיעוד ההסכמה נשמר אצל Google. "
+            "אתם זכאים לעיין בפרטים שלכם ולבקש לתקן אותם, ובכל מייל יש קישור להסרה מהרשימה. "
+            'שאר הפרטים ב<a href="{privacy}">מדיניות הפרטיות</a>.'
+        ),
+        "author_name": "איתי גל", "author_aria": "על הכותב",
+        "author_bio": (
+            "המייסד והמנכ\"ל של D Consulting, שמלווה מלונות ונכסי אירוח בישראל ובאירופה מאז 2016. "
+            "החברה עוסקת בניהול תשואה, בניהול ערוצי מכירה ובטכנולוגיית תיירות, ופיתחה כלים משלה: "
+            "Pacer לניהול תשואה ו-OpenBook לניתוח נתוני הזמנות."
+        ),
+        "author_more": "עוד על איתי",
+        # the analytics consent banner: the homepage's wording (script.js)
+        "cookie_text": ('אנחנו משתמשים בעוגיות אנליטיקס כדי להבין איך משתמשים באתר. '
+                        'בלי פרסום ובלי מכירת מידע. ראו את <a href="{privacy}">מדיניות הפרטיות</a>.'),
+        "cookie_yes": "אישור", "cookie_no": "דחייה", "cookie_aria": "הסכמה לעוגיות",
+        "privacy": "מדיניות פרטיות",
     },
 }
+
+
+def human_date(iso, lang):
+    """2026-07-21 -> '21 July 2026' / '21 ביולי 2026' (the style of privacy.html)."""
+    y, m, d = iso.split("-")
+    month = MONTHS[lang][int(m) - 1]
+    return f"{int(d)} ב{month} {y}" if lang == "he" else f"{int(d)} {month} {y}"
+
+
+def privacy_href(lang, prefix="../"):
+    """The privacy text's email-updates section, in the page's language.
+
+    privacy.html picks its language from ?lang= (then localStorage), so a Hebrew
+    reader lands on the Hebrew section, not on the English default.
+    """
+    if lang == "he":
+        return f"{prefix}privacy.html?lang=he#email-updates-he"
+    return f"{prefix}privacy.html?lang=en#email-updates"
 
 
 def parse_front_matter(raw):
@@ -102,27 +248,27 @@ def slugify(s):
     return re.sub(r"[\s_-]+", "-", s) or "post"
 
 
-def valid_date(raw, fn):
+def valid_date(raw, fn, key="date"):
     """A front-matter date, or None with a printed reason.
 
     Checked, not trusted, because this one hand-typed string reaches four
     machine-read fields: <lastmod>, <pubDate>, datePublished and dateModified.
     `2026-7-21` looks fine and strptime("%m") even accepts it, but it is not a
     valid W3C datetime AND it sorts ABOVE every real 2026-1x date, so the
-    lastmod floor below would pin that article's date forever — silently, at
+    lastmod floor below would pin that article's date forever, silently, at
     exit 0. A missing date used to default to 1970-01-01 and print nothing,
     which put "1970-01-01" on a page a client can read.
     """
     if not raw:
-        print(f"  ! skipping {fn}: no date (add `date: YYYY-MM-DD`)")
+        print(f"  ! skipping {fn}: no {key} (add `{key}: YYYY-MM-DD`)")
         return None
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw):
-        print(f"  ! skipping {fn}: date {raw!r} is not YYYY-MM-DD")
+        print(f"  ! skipping {fn}: {key} {raw!r} is not YYYY-MM-DD")
         return None
     try:
         datetime.strptime(raw, "%Y-%m-%d")           # rejects 2026-13-45
     except ValueError:
-        print(f"  ! skipping {fn}: date {raw!r} is not a real date")
+        print(f"  ! skipping {fn}: {key} {raw!r} is not a real date")
         return None
     return raw
 
@@ -131,7 +277,7 @@ def read_posts():
     """Returns (posts, skipped). A skipped post is a FAILURE, not a warning.
 
     A .md that cannot be built silently disappears from the blog index, the
-    feed, llms.txt and the sitemap — an article withdrawn from the site and from
+    feed, llms.txt and the sitemap: an article withdrawn from the site and from
     Google, at exit 0, reported only by a line that scrolls past. main() refuses
     to write anything while `skipped` is non-empty. To take a post out on
     purpose, rename it so it no longer ends in .md.
@@ -154,6 +300,30 @@ def read_posts():
             continue
         if date > TODAY:
             print(f"  ! {fn}: date {date} is in the future; lastmod floored at {TODAY}")
+        modified = None
+        if meta.get("modified"):
+            modified = valid_date(meta.get("modified"), fn, key="modified")
+            if not modified:
+                skipped.append(fn)
+                continue
+            if modified < date:
+                print(f"  ! skipping {fn}: modified {modified} is before date {date}")
+                skipped.append(fn)
+                continue
+            if modified > TODAY:
+                print(f"  ! {fn}: modified {modified} is after today ({TODAY}); kept as pinned")
+        image = meta.get("image", "")
+        image_alt = meta.get("image_alt", "")
+        if image and not image_alt:
+            print(f"  ! skipping {fn}: `image` is set but `image_alt` is not "
+                  "(every per-post image needs written alt text, playbook 10.7)")
+            skipped.append(fn)
+            continue
+        author = meta.get("author", "Itai Gal")
+        if author not in KNOWN_AUTHORS:
+            print(f"  ! skipping {fn}: author {author!r} has no author page or bio here")
+            skipped.append(fn)
+            continue
         lang = (meta.get("lang") or "en").lower()
         slug = meta.get("slug") or slugify(meta["title"])
         words = len(re.findall(r"\w+", body, flags=re.UNICODE))
@@ -161,23 +331,27 @@ def read_posts():
             "file": fn,
             "title": meta["title"],
             "date": date,
+            "modified": modified,
             "lang": lang if lang in ("en", "he") else "en",
             "tags": [t.strip() for t in (meta.get("tags") or "").split(",") if t.strip()],
             "excerpt": meta.get("excerpt", ""),
-            "image": meta.get("image", ""),
-            "author": meta.get("author", "Itai Gal"),
+            "image": image,
+            "image_alt": image_alt,
+            "author": author,
             "base": slug,
             "slug": f"{slug}-{lang}" if lang == "he" else slug,
             # Modification date of the SOURCE, not of the rendered file. Google
             # asks lastmod to track the main content; a nav or template change
             # rewrites every article without changing a word any reader reads,
             # and claiming otherwise is how a site teaches Google to ignore the
-            # field. Floored at the publish date so it can never run backwards —
-            # and the floor itself is capped at today, so a future-dated post
-            # cannot pin its own lastmod ahead of every subsequent edit. When git
+            # field. A front-matter `modified:` wins outright: it is the human
+            # statement of when the content last changed in substance. Without
+            # it: floored at the publish date so it can never run backwards, and
+            # the floor itself is capped at today, so a future-dated post cannot
+            # pin its own lastmod ahead of every subsequent edit. When git
             # cannot answer, the publish date is the honest fallback, not today.
-            "lastmod": max(min(date, TODAY),
-                           lastmod(os.path.join("posts", fn)) or date),
+            "lastmod": modified or max(min(date, TODAY),
+                                       lastmod(os.path.join("posts", fn)) or date),
             "body_html": md_lib.markdown(body, extensions=["extra", "sane_lists"]),
             "words": words,
             "minutes": max(1, round(words / 200)),
@@ -187,9 +361,12 @@ def read_posts():
 
 
 def head(title, desc, lang, canonical, image="", alts=None, switch=None,
-         hreflang_note=None):
+         hreflang_note=None, image_alt="", body_attrs=""):
     rtl = ' dir="rtl"' if lang == "he" else ' dir="ltr"'
     og_img = f"{SITE}/{image}" if image else f"{SITE}/assets/og.jpg"
+    og_alt = (f'\n<meta property="og:image:alt" content="{html.escape(image_alt)}">'
+              f'\n<meta name="twitter:image:alt" content="{html.escape(image_alt)}">'
+              if image and image_alt else "")
     u = UI[lang]
     switch_html = (
         f'\n      <a class="langtoggle" href="{switch}" '
@@ -217,7 +394,7 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
     cta = _nl(f"{home}#contact", "n_cta", "btn btn--sm btn--primary")
 
     if alts and hreflang_note:
-        raise ValueError("head(): pass alts OR hreflang_note, not both — "
+        raise ValueError("head(): pass alts OR hreflang_note, not both: "
                          "the note would be dropped silently.")
     hreflang = "".join(
         f'\n<link rel="alternate" hreflang="{l}" href="{u}">' for l, u in (alts or [])
@@ -240,16 +417,25 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:url" content="{canonical}">
-<meta property="og:image" content="{og_img}">
+<meta property="og:image" content="{og_img}">{og_alt}
 <meta name="twitter:card" content="summary_large_image">
-<link rel="alternate" type="application/rss+xml" title="D Consulting — Insights" href="{SITE}/blog/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="D Consulting Insights" href="{SITE}/blog/feed.xml">
 <link rel="icon" type="image/png" href="../assets/icon-512.png">
+<!-- Google Analytics 4: deliberately NOT loaded here. ../extras.js injects it
+     only after the visitor accepts analytics cookies (GDPR), exactly like the
+     homepage's script.js, and with the same stored choice. -->
+<script>
+  window.DC_GA_ID = "{GA_ID}";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){{dataLayer.push(arguments);}}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=Heebo:wght@400;500;700&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../extras.css">
 </head>
-<body class="subpage">
+<body class="subpage"{body_attrs}>
 
 <!-- full site nav, so the reader never feels they have left the site -->
 <header class="nav scrolled" id="nav">
@@ -273,8 +459,42 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
 """
 
 
-def foot(lang):
+def consent_banner(lang, both=False):
+    """The analytics consent banner, in the homepage's own words.
+
+    `both` renders the two languages side by side for the blog index, whose
+    language is switched client-side; its apply() toggles [data-langblock].
+    """
+    def text(l, hidden=False):
+        t = UI[l]["cookie_text"].replace("{privacy}", privacy_href(l).split("#")[0])
+        if not both:
+            return t
+        return f'<span data-langblock="{l}"{" hidden" if hidden else ""}>{t}</span>'
+    if both:
+        body = text("en") + text("he", hidden=True)
+        no = (f'<button class="consent__btn" id="consentNo" type="button" '
+              f'data-en="{UI["en"]["cookie_no"]}" data-he="{UI["he"]["cookie_no"]}">{UI["en"]["cookie_no"]}</button>')
+        yes = (f'<button class="consent__btn consent__btn--yes" id="consentYes" type="button" '
+               f'data-en="{UI["en"]["cookie_yes"]}" data-he="{UI["he"]["cookie_yes"]}">{UI["en"]["cookie_yes"]}</button>')
+    else:
+        body = text(lang)
+        no = f'<button class="consent__btn" id="consentNo" type="button">{UI[lang]["cookie_no"]}</button>'
+        yes = f'<button class="consent__btn consent__btn--yes" id="consentYes" type="button">{UI[lang]["cookie_yes"]}</button>'
+    return f"""<div class="consent" id="consent" role="dialog" aria-label="{UI[lang]['cookie_aria']}" hidden>
+  <div class="consent__inner">
+    <p class="consent__text">{body}</p>
+    <div class="consent__actions">
+      {no}
+      {yes}
+    </div>
+  </div>
+</div>
+"""
+
+
+def foot(lang, both=False):
     u = UI[lang]
+    priv = "../privacy.html?lang=he" if lang == "he" else "../privacy.html"
     return f"""<footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
@@ -292,9 +512,11 @@ def foot(lang):
   </div>
   <div class="container footer__bottom">
     <span>&copy; <span id="year">2026</span> D Consulting.</span>
-    <a class="footer__privacy" href="../privacy.html">Privacy</a>
+    <a class="footer__privacy js-privacy" href="{priv}" data-en="{UI['en']['privacy']}" data-he="{UI['he']['privacy']}">{html.escape(u['privacy'])}</a>
   </div>
 </footer>
+
+{consent_banner(lang, both=both)}
 <script>
 document.getElementById('year').textContent = new Date().getFullYear();
 (function () {{
@@ -309,6 +531,8 @@ document.getElementById('year').textContent = new Date().getFullYear();
   [].forEach.call(l.querySelectorAll('a'), function (a) {{ a.addEventListener('click', close); }});
 }})();
 </script>
+<script src="../extras.js"></script>
+<script>if (window.DC) DC.initConsent();</script>
 </body>
 </html>
 """
@@ -319,11 +543,83 @@ def write(path, content):
         f.write(content)
 
 
+def subscribe_form(lang, page_url, slug, uid, lead, prefix="../"):
+    """The one-field subscription form (P2-8, A17). Same markup everywhere.
+
+    With JS, ../extras.js posts it with fetch(no-cors) and shows "check your
+    inbox". Without JS it posts to the endpoint with redirect=1, and the
+    endpoint redirects to /subscribe/check(-he).html. `hp` is the honeypot.
+    """
+    u = UI[lang]
+    consent = u["consent_line"].replace("{privacy}", privacy_href(lang, prefix))
+    return f"""<form class="subform" id="sf-{uid}" action="{SUBSCRIBE_ENDPOINT}" method="post" data-subscribe data-slug="{html.escape(slug)}">
+      <p class="subform__lead">{html.escape(lead)}</p>
+      <div class="subform__row">
+        <label class="vh" for="sf-{uid}-email">{html.escape(u['sub_label'])}</label>
+        <input class="subform__input" id="sf-{uid}-email" name="email" type="email" autocomplete="email" required placeholder="{html.escape(u['sub_label'])}">
+        <button class="btn btn--primary subform__btn" type="submit">{html.escape(u['sub_btn'])}</button>
+      </div>
+      <input type="hidden" name="lang" value="{lang}">
+      <input type="hidden" name="page" value="{page_url}">
+      <input type="hidden" name="consent_version" value="{CONSENT_VERSION[lang]}">
+      <input type="hidden" name="redirect" value="1">
+      <div class="vh" aria-hidden="true"><label>{html.escape(u['hp_label'])} <input type="text" name="hp" value="" tabindex="-1" autocomplete="off"></label></div>
+      <p class="subform__consent">{consent}</p>
+      <p class="subform__status" role="status" aria-live="polite"></p>
+    </form>"""
+
+
+def asks_block(p, url):
+    """The fixed end-of-post block: consultation, subscription, LinkedIn (playbook 7).
+
+    Written once per language; only the WhatsApp pre-fill and the email subject
+    change per post (the post's title). Hebrew: WhatsApp first. English: email
+    first (playbook 7.7).
+    """
+    lang = p["lang"]
+    u = UI[lang]
+    wa = f"https://wa.me/{WHATSAPP}?text=" + quote(u["wa_text"] + p["title"], safe="")
+    mail = f"mailto:{EMAIL}?subject=" + quote(p["title"], safe="")
+    wa_cls = "btn--wa" if lang == "he" else "btn--line"
+    mail_cls = "btn--primary" if lang == "en" else "btn--line"
+    wa_btn = (f'<a class="btn {wa_cls}" href="{html.escape(wa)}" target="_blank" rel="noopener" '
+              f'data-cta="whatsapp">{html.escape(u["btn_wa"])}</a>')
+    mail_btn = f'<a class="btn {mail_cls}" href="{html.escape(mail)}" data-cta="email">{html.escape(u["btn_email"])}</a>'
+    btns = f"{wa_btn}\n        {mail_btn}" if lang == "he" else f"{mail_btn}\n        {wa_btn}"
+    form = subscribe_form(lang, url, p["base"], "post", u["sub_lead_post"])
+    return f"""<section class="asks" aria-labelledby="asks-title">
+      <h2 class="asks__title" id="asks-title">{html.escape(u['asks_h'])}</h2>
+      <p class="asks__lead">{html.escape(u['asks_lead'])}</p>
+      <div class="asks__btns">
+        {btns}
+      </div>
+      <div class="asks__sub">
+    {form}
+      </div>
+      <p class="asks__follow">{u['follow'].replace('{li}', LINKEDIN)}</p>
+    </section>"""
+
+
+def author_block(lang):
+    u = UI[lang]
+    href = "../" + AUTHOR_PAGE[lang]
+    return f"""<aside class="author" aria-label="{html.escape(u['author_aria'])}">
+      <img class="author__photo" src="../assets/itai.jpg" alt="{html.escape(u['author_name'])}" width="72" height="72" loading="lazy">
+      <div class="author__text">
+        <p class="author__name"><a href="{href}">{html.escape(u['author_name'])}</a></p>
+        <p class="author__bio">{html.escape(u['author_bio'])}</p>
+        <p class="author__more"><a href="{href}">{html.escape(u['author_more'])}</a></p>
+      </div>
+    </aside>"""
+
+
 def build_article(p, alts=None):
-    u = UI[p["lang"]]
+    lang = p["lang"]
+    u = UI[lang]
     url = f"{SITE}/blog/{p['slug']}.html"
     tags = "".join(f'<span class="ptag">{html.escape(t)}</span>' for t in p["tags"])
-    hero = (f'<img class="post__hero" src="../{p["image"]}" alt="">' if p["image"] else "")
+    hero = (f'<img class="post__hero" src="../{p["image"]}" alt="{html.escape(p["image_alt"])}">'
+            if p["image"] else "")
     doc = {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
@@ -331,17 +627,18 @@ def build_article(p, alts=None):
         "description": p["excerpt"] or p["title"],
         "datePublished": p["date"],
         "dateModified": p["lastmod"],
-        "inLanguage": p["lang"],
+        "inLanguage": lang,
         "image": [f"{SITE}/{p['image']}" if p["image"] else f"{SITE}/assets/og.jpg"],
         "keywords": ", ".join(p["tags"]),
         "articleSection": p["tags"][0] if p["tags"] else "Hotels",
         "wordCount": p["words"],
         "author": {
             "@type": "Person",
+            "@id": PERSON_ID,
             "name": p["author"],
             "jobTitle": "Founder & CEO",
-            "url": f"{SITE}/#about",
-            "sameAs": ["https://www.linkedin.com/in/itai-gal/"],
+            "url": f"{SITE}/{AUTHOR_PAGE[lang]}",
+            "sameAs": [LINKEDIN],
             "worksFor": {"@type": "Organization", "name": "D Consulting", "url": SITE},
         },
         "publisher": {
@@ -355,25 +652,36 @@ def build_article(p, alts=None):
     }
     schema = ('<script type="application/ld+json">\n'
               + json.dumps(doc, ensure_ascii=False, indent=1) + "\n</script>")
-    other = next((v.rsplit("/", 1)[-1] for l, v in (alts or []) if l != p["lang"]), None)
+    other = next((v.rsplit("/", 1)[-1] for l, v in (alts or []) if l != lang), None)
+    # Visible, labelled dates (playbook 10.6): "Updated" appears only when the
+    # front matter pins a substantive edit, never because git saw a commit.
+    dates = (f'{html.escape(u["published"])}<time datetime="{p["date"]}">'
+             f'{human_date(p["date"], lang)}</time>')
+    if p["modified"] and p["modified"] != p["date"]:
+        dates += (f' · {html.escape(u["updated"])}<time datetime="{p["modified"]}">'
+                  f'{human_date(p["modified"], lang)}</time>')
+    byline = (f'{html.escape(u["by"])} <a href="../{AUTHOR_PAGE[lang]}">'
+              f'{html.escape(p["author"])}</a>')
     return (
-        head(f"{p['title']} — D Consulting", p["excerpt"] or p["title"], p["lang"], url,
-             p["image"], alts=alts, switch=other)
+        head(f"{p['title']} | D Consulting", p["excerpt"] or p["title"], lang, url,
+             p["image"], alts=alts, switch=other, image_alt=p["image_alt"],
+             body_attrs=f' data-post="{html.escape(p["base"])}"')
         + f"""<main class="post">
   <div class="post__wrap">
-    <p class="post__meta"><time datetime="{p['date']}">{p['date']}</time> · {p['minutes']} {html.escape(u['min'])} · {html.escape(u['by'])} {html.escape(p['author'])}</p>
+    <p class="post__meta">{dates} · {p['minutes']} {html.escape(u['min'])} · {byline}</p>
     <h1 class="post__title">{html.escape(p['title'])}</h1>
     <div class="post__tags">{tags}</div>
     {hero}
     <article class="post__body">
 {p['body_html']}
     </article>
-    <p class="post__foot"><a class="btn btn--primary" href="../#contact">{'בואו נדבר' if p['lang']=='he' else "Let's talk"}</a></p>
+    {asks_block(p, url)}
+    {author_block(lang)}
   </div>
 </main>
 {schema}
 """
-        + foot(p["lang"])
+        + foot(lang)
     )
 
 
@@ -387,7 +695,7 @@ def build_index(posts):
         <a class="pcard__link" href="{p['slug']}.html">
           {f'<img class="pcard__img" src="../{p["image"]}" alt="" loading="lazy">' if p['image'] else ''}
           <div class="pcard__body">
-            <p class="pcard__meta"><time datetime="{p['date']}">{p['date']}</time> · {p['minutes']} {html.escape(u['min'])}</p>
+            <p class="pcard__meta"><time datetime="{p['date']}">{human_date(p['date'], lang)}</time> · {p['minutes']} {html.escape(u['min'])}</p>
             <h2 class="pcard__title">{html.escape(p['title'])}</h2>
             <p class="pcard__excerpt">{html.escape(p['excerpt'])}</p>
             <div class="post__tags">{''.join(f'<span class="ptag">{html.escape(t)}</span>' for t in p['tags'])}</div>
@@ -396,11 +704,15 @@ def build_index(posts):
       </article>"""
             for p in items
         ) or f'<p class="pempty">{html.escape(u["empty"])}</p>'
+        form = subscribe_form(lang, f"{SITE}/blog/", "(index)", f"index-{lang}", u["sub_lead_index"])
         out.append(f"""  <section class="bloglang" data-lang="{lang}"{'' if lang == 'en' else ' hidden'}>
     <div class="section__head section__head--center">
       <p class="kicker">{html.escape(u['kicker'])}</p>
       <h1 class="h2">{html.escape(u['title'])}</h1>
       <p class="section__sub">{html.escape(u['sub'])}</p>
+    </div>
+    <div class="blogsub">
+    {form}
     </div>
     <div class="pgrid">
 {cards}
@@ -412,7 +724,7 @@ def build_index(posts):
         "@context": "https://schema.org",
         "@type": "Blog",
         "@id": f"{SITE}/blog/",
-        "name": "D Consulting — Insights",
+        "name": "D Consulting Insights",
         "description": UI["en"]["sub"],
         "url": f"{SITE}/blog/",
         "inLanguage": ["en", "he"],
@@ -426,9 +738,9 @@ def build_index(posts):
         } for p in posts],
     }, ensure_ascii=False, indent=1) + "\n</script>\n")
     return (
-        head("Insights — D Consulting", UI["en"]["sub"], "en", f"{SITE}/blog/",
+        head("Insights | D Consulting", UI["en"]["sub"], "en", f"{SITE}/blog/",
              hreflang_note=INDEX_HREFLANG_NOTE,
-             switch="?lang=he")
+             switch="?lang=he", body_attrs=' data-post="(index)"')
         + f"""<main class="section">
   <div class="container">
 {body}
@@ -445,23 +757,35 @@ def build_index(posts):
     [].forEach.call(document.querySelectorAll('.bloglang'), function (s) {{
       s.hidden = (s.getAttribute('data-lang') !== l);
     }});
-    /* nav + breadcrumb labels */
+    /* blocks that carry markup (the cookie banner text), one per language */
+    [].forEach.call(document.querySelectorAll('[data-langblock]'), function (s) {{
+      s.hidden = (s.getAttribute('data-langblock') !== l);
+    }});
+    /* nav + breadcrumb + banner button labels */
     [].forEach.call(document.querySelectorAll('[data-en][data-he]'), function (a) {{
       var t = a.getAttribute(he ? 'data-he' : 'data-en');
       if (t) a.textContent = t;
     }});
-    /* keep the language when heading back to the main site */
+    /* keep the language when heading back to the main site. Only links to the
+       home page itself (../ with an optional ?lang=he and #section) are
+       rewritten; ../privacy.html, ../jobs/ and ../about/ keep their paths. */
     [].forEach.call(document.querySelectorAll('a[href^="../"]'), function (a) {{
       var h = a.getAttribute('href');
-      if (h.indexOf('../') !== 0 || h.indexOf('../assets') === 0) return;
-      var parts = h.split('#');
-      a.setAttribute('href', '../' + (he ? '?lang=he' : '') + (parts[1] ? '#' + parts[1] : ''));
+      var m = h.match(/^\\.\\.\\/(\\?lang=he)?(#.*)?$/);
+      if (m) {{ a.setAttribute('href', '../' + (he ? '?lang=he' : '') + (m[2] || '')); return; }}
+      if (h.indexOf('../jobs/analyst/') === 0) a.setAttribute('href', he ? '../jobs/analyst/' : '../jobs/analyst/en.html');
+    }});
+    [].forEach.call(document.querySelectorAll('a.js-privacy'), function (a) {{
+      a.setAttribute('href', he ? '../privacy.html?lang=he' : '../privacy.html');
     }});
     var sw = document.querySelector('.langtoggle');
     if (sw) sw.textContent = he ? 'English' : 'עברית';
     try {{ localStorage.setItem('dc_lang', l); }} catch (e) {{}}
   }}
   apply(saved);
+  /* the footer and the cookie banner come after this script in the page, so
+     apply again once they exist (apply is idempotent) */
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () {{ apply(saved); }});
   var sw = document.querySelector('.langtoggle');
   if (sw) sw.addEventListener('click', function (e) {{
     e.preventDefault();
@@ -471,13 +795,13 @@ def build_index(posts):
 </script>
 """
         + blog_schema
-        + foot("en")
+        + foot("en", both=True)
     )
 
 
 def build_feed(posts):
     # RSS defines lastBuildDate as "the last time the content of the channel
-    # changed" — so it is derived from the posts, not from the wall clock. Wall
+    # changed", so it is derived from the posts, not from the wall clock. Wall
     # clock made every no-op rebuild dirty feed.xml with a meaningless change,
     # which is how a real change gets committed unread, and it was the same
     # untruth this build was cleaning out of the sitemap.
@@ -496,7 +820,7 @@ def build_feed(posts):
     )
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel>
-    <title>D Consulting — Insights</title>
+    <title>D Consulting Insights</title>
     <link>{SITE}/blog/</link>
     <description>Revenue management, distribution and travel-tech insight for hotels and vacation rentals.</description>
     <lastBuildDate>{now}</lastBuildDate>
@@ -522,7 +846,7 @@ def _history_available():
     A shallow clone is treated as "cannot answer" on purpose: `git log` there
     reports the single fetched commit for every path, so every page would come
     out as changed today. actions/checkout defaults to fetch-depth 1, so this is
-    the likely environment for any CI that ever builds this site — the failure
+    the likely environment for any CI that ever builds this site, and the failure
     would arrive quietly, as a sitemap that had gone back to lying.
     """
     if _git("rev-parse", "--git-dir") is None:
@@ -557,7 +881,7 @@ def lastmod(rel):
     the file clean, so a no-op build no longer ages the sitemap.
 
     None means "no answer", and the caller must then omit <lastmod> rather than
-    guess — the element is optional, and saying nothing beats saying today.
+    guess: the element is optional, and saying nothing beats saying today.
 
     Note the deliberate difference from the article rule in read_posts(): for a
     hand-maintained page the file IS the source, so ANY byte change counts,
@@ -566,6 +890,8 @@ def lastmod(rel):
     """
     if not _history_available():
         return None
+    if _git("ls-files", "--error-unmatch", "--", rel) is None:
+        return TODAY                       # not tracked yet: new in the coming commit
     if _git("diff", "--quiet", "HEAD", "--", rel) is None:
         return TODAY                       # non-zero exit == the file is dirty
     return _commit_date(rel)
@@ -575,7 +901,7 @@ def lastmod_generated(rel, content):
     """Same, for a file this script writes, judged on the content about to be written.
 
     `lastmod()` reads the copy on disk, which for a generated file is the PREVIOUS
-    build's output — so it would answer about the wrong bytes whenever the check
+    build's output, so it would answer about the wrong bytes whenever the check
     runs before the write. Comparing against the committed blob instead makes the
     answer independent of write order.
     """
@@ -587,6 +913,16 @@ def lastmod_generated(rel, content):
     return _commit_date(rel)
 
 
+def _author_pages():
+    """The author pages that exist on disk, as [(lang, url, rel-from-blog)]."""
+    out = []
+    for lang in ("en", "he"):
+        rel = os.path.join("..", AUTHOR_PAGE[lang])
+        if os.path.exists(os.path.join(HERE, rel)):
+            out.append((lang, f"{SITE}/{AUTHOR_PAGE[lang]}", rel))
+    return out
+
+
 def build_sitemap(posts, by_base, blog_index_html):
     """Whole-site sitemap. Regenerated on every build so new posts are never missed."""
     rows = [
@@ -595,6 +931,14 @@ def build_sitemap(posts, by_base, blog_index_html):
          "weekly", "0.9", []),
         (f"{SITE}/privacy.html", lastmod("../privacy.html"), "yearly", "0.3", []),
     ]
+    # The author pages have one real URL per language, so their pair is valid
+    # hreflang. A page that is not on disk is not listed: a sitemap row for a
+    # 404 is worse than no row.
+    authors = _author_pages()
+    author_alts = [(l, u) for l, u, _ in authors]
+    for _, loc, rel in authors:
+        rows.append((loc, lastmod(rel), "yearly", "0.5",
+                     author_alts if len(author_alts) > 1 else []))
     for p in posts:
         alts = [(q["lang"], f"{SITE}/blog/{q['slug']}.html") for q in by_base[p["base"]]]
         rows.append((f"{SITE}/blog/{p['slug']}.html", p["lastmod"], "monthly", "0.8",
@@ -619,11 +963,13 @@ def build_sitemap(posts, by_base, blog_index_html):
 
 
 def build_llms(posts):
-    """/llms.txt — proposed convention giving AI systems a clean map of the site."""
+    """/llms.txt: proposed convention giving AI systems a clean map of the site."""
     arts = "\n".join(
         f"- [{p['title']}]({SITE}/blog/{p['slug']}.html): {p['excerpt']}"
         for p in posts
     ) or "- (no articles yet)"
+    author = (f"\n- [About Itai Gal]({SITE}/{AUTHOR_PAGE['en']}): the author of the Insights articles"
+              if any(l == "en" for l, _, _ in _author_pages()) else "")
     return f"""# D Consulting
 
 > Revenue management, online distribution and travel-tech consultancy for
@@ -631,7 +977,7 @@ def build_llms(posts):
 > sales channels into measurable revenue growth. Founded 2016, based in
 > Tel Aviv-Yafo, Israel; clients across Israel and Europe.
 
-Founder: Itai Gal (Founder & CEO) — https://www.linkedin.com/in/itai-gal/
+Founder: Itai Gal (Founder & CEO), https://www.linkedin.com/in/itai-gal/
 Contact: itai@dconsult.me · +972-52-889-5995
 
 ## What we do
@@ -643,18 +989,18 @@ Contact: itai@dconsult.me · +972-52-889-5995
 - Team training, weekly reporting and ongoing partnership
 
 ## Proprietary technology
-- **Pacer** — self-learning revenue management. Builds per-property pickup curves from
+- **Pacer**: self-learning revenue management. Builds per-property pickup curves from
   multi-year on-the-books data, re-weights seasons when the market shifts, and runs an
   audit layer that scores its own past recommendations and recalibrates.
-- **OpenBook** — source-agnostic reservation analytics. Reads an export from virtually any
+- **OpenBook**: source-agnostic reservation analytics. Reads an export from virtually any
   PMS or channel, normalises it, and reports channel mix, lead time, length of stay,
   room-type performance, seasonality and cancellation behaviour. Runs client-side.
-- **Automated reporting** — weekly pace reports and monthly deep-dives assembled from live
+- **Automated reporting**: weekly pace reports and monthly deep-dives assembled from live
   data, always reviewed by a human before delivery.
 
 ## Pages
 - [Home]({SITE}/): services, approach, platform and results
-- [Insights (blog)]({SITE}/blog/): articles on hotel distribution and revenue
+- [Insights (blog)]({SITE}/blog/): articles on hotel distribution and revenue{author}
 - [Privacy policy]({SITE}/privacy.html)
 - [RSS feed]({SITE}/blog/feed.xml)
 
@@ -712,7 +1058,7 @@ def scan_lang_hreflang(text, label):
 # privacy.html qualifies for exactly the same reasons as the root (same
 # canonical, same langPick button, /privacy.html?lang=he byte-identical to
 # /privacy.html). sitemap.xml is here because a cluster can be declared there
-# instead of in the markup. The generated pages — blog/index.html above all —
+# instead of in the markup. The generated pages, blog/index.html above all,
 # are checked from the render dict before they are written, not from disk.
 GUARDED_HAND_MAINTAINED = ("../index.html", "../privacy.html", "../sitemap.xml")
 
@@ -726,7 +1072,7 @@ def check_no_lang_hreflang(generated):
     is a comment. A comment is not a guard. This is, and it runs on every build.
 
     `generated` maps a label to content this build is about to write, and is
-    checked BEFORE anything is written — an earlier version wrote first and
+    checked BEFORE anything is written. An earlier version wrote first and
     checked after, so a failing build exited 1 having already left the offending
     file on disk, where GitHub Pages (which never runs this script) would happily
     publish it if the operator scrolled past the red.
@@ -743,7 +1089,7 @@ def check_no_lang_hreflang(generated):
             with open(path, encoding="utf-8") as fh:
                 bad += scan_lang_hreflang(fh.read(), rel)
     if bad:
-        sys.exit("FAIL — a ?lang= hreflang cluster is back:\n  "
+        sys.exit("FAIL: a ?lang= hreflang cluster is back:\n  "
                  + "\n  ".join(bad)
                  + "\nThose URLs are not canonical in their own right (both return "
                    "byte-identical HTML and canonicalise to the bare path), so the "
@@ -752,10 +1098,12 @@ def check_no_lang_hreflang(generated):
 
 
 def main():
+    if os.environ.get("SOURCE_DATE"):
+        print(f"SOURCE_DATE={TODAY} (today pinned)")
     posts, skipped = read_posts()
     print(f"Found {len(posts)} post(s)")
     if skipped:
-        sys.exit(f"FAIL — {len(skipped)} post(s) could not be built: "
+        sys.exit(f"FAIL: {len(skipped)} post(s) could not be built: "
                  + ", ".join(skipped)
                  + "\nEach would have vanished from the blog index, the feed, "
                    "llms.txt and the sitemap without failing the build. Fix the "
@@ -766,7 +1114,7 @@ def main():
     for p in posts:
         by_base.setdefault(p["base"], []).append(p)
 
-    # Render everything first, check, then write — so a build that fails the
+    # Render everything first, check, then write, so a build that fails the
     # check leaves nothing behind for anyone to commit by accident.
     out = {}
     for p in posts:

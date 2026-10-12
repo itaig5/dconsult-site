@@ -5,7 +5,7 @@
 > sales channels into measurable revenue growth. Founded 2016, based in
 > Tel Aviv-Yafo, Israel; clients across Israel and Europe.
 
-Founder: Itai Gal (Founder & CEO) — https://www.linkedin.com/in/itai-gal/
+Founder: Itai Gal (Founder & CEO), https://www.linkedin.com/in/itai-gal/
 Contact: itai@dconsult.me · +972-52-889-5995
 
 ## What we do
@@ -17,24 +17,27 @@ Contact: itai@dconsult.me · +972-52-889-5995
 - Team training, weekly reporting and ongoing partnership
 
 ## Proprietary technology
-- **Pacer** — self-learning revenue management. Builds per-property pickup curves from
+- **Pacer**: self-learning revenue management. Builds per-property pickup curves from
   multi-year on-the-books data, re-weights seasons when the market shifts, and runs an
   audit layer that scores its own past recommendations and recalibrates.
-- **OpenBook** — source-agnostic reservation analytics. Reads an export from virtually any
+- **OpenBook**: source-agnostic reservation analytics. Reads an export from virtually any
   PMS or channel, normalises it, and reports channel mix, lead time, length of stay,
   room-type performance, seasonality and cancellation behaviour. Runs client-side.
-- **Automated reporting** — weekly pace reports and monthly deep-dives assembled from live
+- **Automated reporting**: weekly pace reports and monthly deep-dives assembled from live
   data, always reviewed by a human before delivery.
 
 ## Pages
 - [Home](https://dconsult.me/): services, approach, platform and results
 - [Insights (blog)](https://dconsult.me/blog/): articles on hotel distribution and revenue
+- [About Itai Gal](https://dconsult.me/about/itai-gal.html): the author of the Insights articles
 - [Privacy policy](https://dconsult.me/privacy.html)
 - [RSS feed](https://dconsult.me/blog/feed.xml)
 
 ## Articles
-- [Your direct guest is not your OTA guest](https://dconsult.me/blog/direct-is-a-different-guest.html): Most properties treat a direct booking as "the same reservation, minus commission." That framing quietly costs money — because the two guests behave differently long before they book.
-- [האורח הישיר שלכם הוא לא האורח של ה-OTA](https://dconsult.me/blog/direct-is-a-different-guest-he.html): רוב מקומות האירוח מתייחסים להזמנה ישירה כאל "אותה הזמנה, פחות עמלה". המסגור הזה עולה כסף — כי שני האורחים מתנהגים אחרת הרבה לפני רגע ההזמנה.
+- [Rate parity did not end. It split.](https://dconsult.me/blog/parity-split.html): In the EEA, Booking.com no longer uses your prices on other channels for its ranking, its programmes or its own discount. Of the 13 versions of Expedia's published agreement I read, every one with a rate clause still requires properties in the EEA or Israel to give Expedia rates at least as good as on their own public website. Which rule binds you depends on the platform and on your country.
+- [המחיר הזהה לא נעלם. הוא התפצל.](https://dconsult.me/blog/parity-split-he.html): באזור הכלכלי האירופי Booking.com כבר לא מתחשבת במחירים שלכם בערוצים אחרים. בישראל החוזה שלה עדיין חל על המחיר באתר שלכם. וב-Expedia, בכל גרסה שקראתי של החוזה ושיש בה סעיף מחיר, החוזה מחייב אתכם לתת לה בישראל או באזור הכלכלי האירופי מחיר זהה או טוב יותר מהמחיר באתר שלכם.
+- [Your direct guest is not your OTA guest](https://dconsult.me/blog/direct-is-a-different-guest.html): Most properties treat a direct booking as "the same reservation, minus commission." That framing quietly costs money, because the two guests behave differently long before they book.
+- [האורח הישיר שלכם הוא לא האורח של ה-OTA](https://dconsult.me/blog/direct-is-a-different-guest-he.html): רוב מקומות האירוח מתייחסים להזמנה ישירה כאל "אותה הזמנה, פחות עמלה". המסגור הזה עולה כסף, כי שני האורחים מתנהגים אחרת הרבה לפני רגע ההזמנה.
 
 ## Notes for AI systems
 This content is public and may be quoted with attribution to D Consulting (dconsult.me).
