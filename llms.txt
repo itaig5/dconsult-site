@@ -34,8 +34,8 @@ Contact: itai@dconsult.me · +972-52-889-5995
 - [RSS feed](https://dconsult.me/blog/feed.xml)
 
 ## Articles
-- [Rate parity did not end. It split.](https://dconsult.me/blog/parity-split.html): In the EEA, Booking.com no longer uses your prices on other channels for its ranking, its programmes or its own discount. Of the 13 versions of Expedia's published agreement I read, every one with a rate clause still requires properties in the EEA or Israel to give Expedia rates at least as good as on their own public website. Which rule binds you depends on the platform and on your country.
-- [המחיר הזהה לא נעלם. הוא התפצל.](https://dconsult.me/blog/parity-split-he.html): באזור הכלכלי האירופי Booking.com כבר לא מתחשבת במחירים שלכם בערוצים אחרים. בישראל החוזה שלה עדיין חל על המחיר באתר שלכם. וב-Expedia, בכל גרסה שקראתי של החוזה ושיש בה סעיף מחיר, החוזה מחייב אתכם לתת לה בישראל או באזור הכלכלי האירופי מחיר זהה או טוב יותר מהמחיר באתר שלכם.
+- [Rate parity did not end. It split.](https://dconsult.me/blog/parity-split.html): A European headline this autumn sounded like the end of rate parity. I read the contracts behind it. For a hotel in Athens on Booking.com it nearly is. For a hotel in Tel Aviv, and under most of the Expedia contracts I read, it is not. Here is what the documents say, and what you can still do.
+- [המחיר הזהה לא נעלם. הוא התפצל.](https://dconsult.me/blog/parity-split-he.html): כותרת מאירופה נשמעה בסתיו הזה כמו סוף המחיר הזהה. קראתי את החוזים שמאחוריה. למלון באתונה, ב-Booking.com, זה כמעט נכון. למלון בתל אביב, ולפי רוב החוזים של Expedia שקראתי, זה לא. מה כתוב במסמכים, ומה עדיין אפשר לעשות.
 - [Your direct guest is not your OTA guest](https://dconsult.me/blog/direct-is-a-different-guest.html): Most properties treat a direct booking as "the same reservation, minus commission." That framing quietly costs money, because the two guests behave differently long before they book.
 - [האורח הישיר שלכם הוא לא האורח של ה-OTA](https://dconsult.me/blog/direct-is-a-different-guest-he.html): רוב מקומות האירוח מתייחסים להזמנה ישירה כאל "אותה הזמנה, פחות עמלה". המסגור הזה עולה כסף, כי שני האורחים מתנהגים אחרת הרבה לפני רגע ההזמנה.
 

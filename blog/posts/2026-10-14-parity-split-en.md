@@ -3,62 +3,71 @@ title: Rate parity did not end. It split.
 date: 2026-10-14
 lang: en
 tags: Distribution, Rate Parity, Booking.com, Expedia
-excerpt: In the EEA, Booking.com no longer uses your prices on other channels for its ranking, its programmes or its own discount. Of the 13 versions of Expedia's published agreement I read, every one with a rate clause still requires properties in the EEA or Israel to give Expedia rates at least as good as on their own public website. Which rule binds you depends on the platform and on your country.
+excerpt: A European headline this autumn sounded like the end of rate parity. I read the contracts behind it. For a hotel in Athens on Booking.com it nearly is. For a hotel in Tel Aviv, and under most of the Expedia contracts I read, it is not. Here is what the documents say, and what you can still do.
 image: assets/blog/parity-split-en.png
 image_alt: Card reading "Rate parity did not end. It split." in D Consulting colours
 author: Itai Gal
 slug: parity-split
 ---
 
-On 28 September 2026 the [European Commission](https://digital-markets-act.ec.europa.eu/factsheet-how-dma-ensures-businesses-using-bookingcom-are-free-set-their-prices-and-bookingcom-2026-09-28_en) published a factsheet on how businesses using Booking.com are "free to set their prices on and off Booking.com". Read quickly, that sounds like the end of rate parity: you can finally sell cheaper on your own website. For a property in the European Economic Area, and for Booking.com, that is close to true. The Commission wrote that Booking.com removed the parity requirements from its EEA terms in July 2024, and that from September 2026 your prices elsewhere no longer count for the discount Booking.com funds itself either.
+Picture two hotel owners reading the same news this autumn. One runs a small hotel in Athens, the other a hotel in Tel Aviv.
 
-That is one platform.
+On 28 September 2026 the [European Commission](https://digital-markets-act.ec.europa.eu/factsheet-how-dma-ensures-businesses-using-bookingcom-are-free-set-their-prices-and-bookingcom-2026-09-28_en) published a page on how businesses using Booking.com are now "free to set their prices on and off Booking.com".
 
-Expedia publishes its standard agreement in several versions, all public. In every version I opened that has a rate clause, if your property is in the EEA or in Israel, the agreement requires rates on Expedia at least as good as those on your own public website. In Israel, Booking.com's own terms still reach your website price too. A cheaper website rate that one platform now allows can still break the contract with another.
+Both owners have the same thought: at last, I can sell cheaper on my own website.
 
-## The documents say more than the headline
+The owner in Athens is mostly right. The owner in Tel Aviv is mostly wrong. And both have forgotten Expedia.
 
-I read the Commission's factsheet, Booking.com's terms and partner pages, 13 versions of Expedia's standard agreement and its ranking guide, and the complaint filed against Expedia in Seattle.
+I wanted to know exactly where the line runs, so I stopped reading headlines and opened the documents themselves: the contracts Booking.com and Expedia sign with hotels, their pages for partners, the Commission's page and a lawsuit filed against Expedia this month.
 
-**Booking.com in the EEA.** According to the Commission, Booking.com's default ranking and its Genius, Preferred and Preferred Plus programmes in the EEA already ignored your prices on other channels. From September 2026 that also holds for the Booking Sponsored Benefit, a discount Booking.com funds itself. In the terms, [clause 2.1.4](https://admin.booking.com/hotelreg/terms-and-conditions.html?cc1=it&lang=en) says you need not give Booking.com the same or better rates, though it still bars any action "designed to free-ride on" Booking.com's investment.
+## Athens: the freedom is real, on one platform
 
-**Booking.com's three groups of countries.** The [General Delivery Terms](https://admin.booking.com/hotelreg/terms-and-conditions.html?cc1=il&lang=en) I read on 12 October 2026 (version v2611) sort countries into three groups. *No Parity Countries* are the EEA, Switzerland, Chile, Indonesia, Russia and South Africa. *Narrow Parity Countries* include Israel, the United Kingdom, Australia, Japan and Turkey. Every other country is a *Wide Parity Country*.
+According to the Commission, Booking.com removed the equal-price requirement from its contracts in the European Economic Area back in July 2024. Its ranking and its partner programmes there had already stopped weighing a hotel's prices elsewhere, and from September 2026 the last piece followed: the discount Booking.com pays out of its own pocket no longer depends on them either.
 
-**What the narrow version covers.** For a property in Israel, clause 2.2.1 requires the same or better rates and conditions on Booking.com, including add-ons such as breakfast and policies such as cancellation. Clause 2.2.2 leaves out three things: other online agencies you do not control; offline channels such as the phone or the front desk, as long as those prices are not published or marketed online; and unpublished rates that are not marketed online. The contract's definition of "marketed online" excludes email and messages "that are not aimed at the general public".
+[Booking.com's terms](https://admin.booking.com/hotelreg/terms-and-conditions.html?cc1=it&lang=en) for these countries say it in one line: the hotel does not have to give Booking.com the same or a better price. The only limit is fair play. The prices it loads on Booking.com must not be inflated, and nothing it does may be designed to ride on Booking.com's investment for free.
 
-**An email offer booked on your website.** Clause 5.1(v) is a promise you make: that your price on Booking.com is at least as good as the best price on your own website, including one "otherwise made available online" there, and that a guest cannot get a better price by booking directly on your website or app. It has no exception for unpublished rates. The terms do not say how it fits with clause 2.2.2 when an offer goes out by email and the guest books it on your website.
+So the owner in Athens can sell on their website for less than on Booking.com. Only on Booking.com.
 
-**What Booking.com does not use in Israel.** Annex 4 of the same terms says that for both no-parity and narrow-parity countries, the default ranking does not take into account your prices on other channels. The same annex says that taking part in programmes such as Preferred does affect the ranking. In Israel, the pressure comes from the clauses and the programmes: Booking.com's [Preferred Partner page](https://partner.booking.com/en-us/help/growing-your-business/increase-revenue/all-you-need-know-about-preferred-partner-program) asks properties in narrow-parity countries for prices competitive with their own website, and its [Booking Sponsored Benefit page](https://partner.booking.com/en-us/help/rates-availability/rates-special-offers/understanding-booking-sponsored-benefit) says the discount, available only to properties that use Payments by Booking.com, may apply when "your property's prices aren't competitive", or when they are and you have opted in.
+## Tel Aviv: the headline does not apply
 
-**Expedia's agreement.** Expedia publishes its standard lodging agreement in numbered versions. On 12 October 2026 I opened versions 320 to 332, 13 in all. Eleven have a rate clause; two, 328 and 332, have none, and the numbering does not show which version is current. The eleven with a rate clause come in three kinds:
+The owner in Tel Aviv cannot sell cheaper on her website than on Booking.com, and cannot add breakfast or a softer cancellation policy there either. [Booking.com's terms](https://admin.booking.com/hotelreg/terms-and-conditions.html?cc1=il&lang=en), which I read on 12 October 2026, sort the world into three groups. In the European group there is no equal-price requirement at all. Israel sits in a middle group with the UK, Australia, Japan and Turkey, where the hotel's public website may not offer a lower price or better terms than Booking.com, and a guest booking directly on the hotel's website or app must not find a better price there.
 
-- [Six versions](https://api.expediapartnercentral.com/contract/ext/templatepdf?language=2057&version=331) sort countries into three groups. In Australia the clause does not apply. In the EEA, Israel, the UK, Switzerland, Japan and seven other places, the agreement requires your rates on Expedia to be "equal to or better than" those on your own public online channels. The text spells Israel "Isreal". Everywhere else, the comparison also covers third-party channels. In versions 329 to 331, the agreement also requires the prices of extras such as parking or early check-in to be at least as good as on any other channel, in every country but Australia.
-- In [versions 322 to 324](https://api.expediapartnercentral.com/contract/ext/templatepdf?language=2057&version=323), the comparison is with your own public online channels, "Unless you are located in Australia".
-- In versions 320 and 321, it is with your own and third-party channels, in every country.
+Its terms say the default ranking itself does not look at outside prices. But the [Preferred programme](https://partner.booking.com/en-us/help/growing-your-business/increase-revenue/all-you-need-know-about-preferred-partner-program), which does lift a hotel in that ranking, checks in countries like Israel whether the price on Booking.com is competitive with the hotel's own website. And for hotels that use Booking.com's payment service, [the discount it pays itself](https://partner.booking.com/en-us/help/rates-availability/rates-special-offers/understanding-booking-sponsored-benefit) can kick in when the hotel's prices "aren't competitive".
 
-Where the comparison is with your own public online channels, Expedia's definition leaves out email and messages not aimed at the general public. Expedia may update the country groups "from time to time at Expedia's sole discretion", with notice. And national law can limit the contract: in [Switzerland](https://www.fedlex.admin.ch/eli/cc/1988/223_223_223/de), since 1 December 2022, a booking platform whose terms restrict a hotel's prices through parity clauses is engaging in unfair competition.
+## Expedia did not leave
 
-**Expedia's ranking.** Expedia's [guide to visibility](https://partner.expediagroup.com/en-us/resources/blog/travel-marketplace-visibility-guide) lists "rate competitiveness" among the signals it uses to rank properties. It does not say what your rate is compared with.
+This is where my reading took a turn. I expected to find one Expedia contract. Its partner site serves [many numbered versions](https://api.expediapartnercentral.com/contract/ext/templatepdf?language=2057&version=331) of it, and I opened thirteen. Eleven of them still carry the clause: the price on Expedia must be "equal to or better than" the price on the hotel's own public website, and in two of those, on every other channel too. Several split the world into groups, and Israel sits in the same group as the European Economic Area and the UK. In those versions it is spelled "Isreal". In most versions, only Australia is exempt.
 
-**The lawsuit.** On 2 October 2026, three guests filed [Andrews v. Expedia Group](https://www.courthousenews.com/wp-content/uploads/2026/10/andrews-v-expedia-complaint.pdf) in the federal court in Seattle, case 2:26-cv-03743, about hotels in the United States. They allege that Expedia's contract and its ranking keep hotels from being cheaper elsewhere. These are allegations, and the case has barely begun: as of 12 October 2026, the court record, as mirrored on CourtListener, holds only the complaint and procedural filings.
+Which version a hotel signed, only its own contract shows. But in every version I read that has the clause, the answer for the owner in Athens is the same: cheaper than Booking.com, yes. Cheaper than Expedia, no, unless the law of their own country says otherwise.
 
-## What it means for you
+Expedia's [guide to visibility](https://partner.expediagroup.com/en-us/resources/blog/travel-marketplace-visibility-guide) also lists "rate competitiveness" among the signals it uses to rank hotels, without saying what your rate is compared with. And on 2 October 2026, three guests filed [a class action against Expedia](https://www.courthousenews.com/wp-content/uploads/2026/10/andrews-v-expedia-complaint.pdf) in Seattle, claiming that its contract and its ranking keep hotels in the United States from being cheaper elsewhere. These are allegations, and the case has barely begun.
 
-**If your property is in the EEA.** On Booking.com, you may price your website lower. Before you do, read the rate clause in your Expedia contract. Then ask the question that matters more: whether a cheaper direct rate wins guests you would not otherwise have had, or only moves your own guests onto a lower price. I wrote about that difference in [Your direct guest is not your OTA guest](https://dconsult.me/blog/direct-is-a-different-guest.html).
+## The guest who already knows you
 
-**If your property is in Israel, or in the UK.** A cheaper rate or better conditions on your own public website conflict with both platforms' published terms, and Booking.com's clause names add-ons such as breakfast too. An email offer booked on your website is the case Booking.com's terms leave open. What Booking.com's clauses plainly leave outside: rates at the front desk or by phone that you do not publish or market online, and lower prices on other agencies you do not control.
+In Israel, the UK and the EEA, these contracts apply to the price and terms the public can see. A private relationship you build with a guest yourself, they generally do not reach.
 
-## What to do
+**For the owner in Tel Aviv, and for anyone selling in the UK**, that is the opening: a guest who has already stayed with you.
 
-1. **Read your own clauses, platform by platform.** On Booking.com, clause 2.1.4 in the EEA, or clauses 2.2.1, 2.2.2 and 5.1(v) in Israel and the UK. On Expedia, the rate clause in section C of the version you signed. Then check whether your country's law allows the clause at all.
-2. **In the EEA, check Expedia first.** Then measure whether a lower website rate brings new guests or only moves existing ones to a lower price.
-3. **In Israel, do not price the website below either platform.** Build the direct relationship after the first stay: the guest who has stayed with you is the one you can reach directly. A booking by phone or at the front desk, at a rate you do not publish or market online, sits outside Booking.com's parity clauses.
-4. **On Expedia, treat a ranking change after a price change elsewhere as a first data point.** Expedia's guide names other inputs that move a ranking too, so one change proves little on its own.
+If that guest gave you their own contact details and agreed to hear from you, you can send them a better price by email or WhatsApp, and they book by phone or by email, not on your website.
 
-## Three questions the documents do not answer
+The discount is on the room price only, not a free upgrade or late check-out, because several Expedia versions compare extras like those with every channel. And it is not advertised anywhere public.
 
-Expedia's guide does not say whether rate competitiveness compares your price with other sites, with other hotels, or with both. Booking.com's terms do not say how clause 5.1(v) treats an offer sent by email and booked on your website. And the versions Expedia publishes cannot show which one you signed: only your own contract shows that.
+Contact details and messages that came through Booking.com or Expedia are not for this: both forbid marketing to their guests without consent.
 
-The uncomfortable part is that the freedom, where it exists, says nothing about whether a cheaper website rate makes you money.
+The same goes for a rate you give at the front desk or on the phone, as long as it is not published or advertised online.
 
-Rate parity did not end. It split, and each piece now has its own rule.
+The two Expedia versions that compare every channel do not leave this room, so check which one you signed.
+
+**For the owner in Athens**, the website can be cheaper than Booking.com, but in most of the Expedia versions I read not cheaper than Expedia, and not on better terms. The same private route with returning guests works for them against Expedia too.
+
+**For both**, the published terms may not be the contract you signed, and some countries' laws limit these clauses. [Switzerland](https://www.fedlex.admin.ch/eli/cc/1988/223_223_223/de), for one, has treated platform terms with equal-price clauses as unfair competition since 1 December 2022. Before you change a price, read your own contract and check your country's law.
+
+## What the documents do not say
+
+I read Expedia's guide, and it does not say what Expedia compares your rate with when it ranks you. I read Booking.com's terms, and they do not say how they treat an offer sent by email and then booked on your website. These are the two questions I would keep in mind.
+
+## Freedom is not profit
+
+The freedom, where it exists, does not promise that a cheaper website price will make you money. A cheaper direct price is worth it only if it brings guests you would not have had otherwise. If it only discounts guests who would have booked with you anyway, it costs you. I wrote about that difference in [Your direct guest is not your OTA guest](https://dconsult.me/blog/direct-is-a-different-guest.html).
+
+Rate parity did not end. It split, by platform and by country, and the headline from Europe tells only one piece of it.
