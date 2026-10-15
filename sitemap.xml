@@ -3,13 +3,23 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://dconsult.me/</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dconsult.me/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://dconsult.me/he/"/>
+  </url>
+  <url>
+    <loc>https://dconsult.me/he/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dconsult.me/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://dconsult.me/he/"/>
   </url>
   <url>
     <loc>https://dconsult.me/blog/</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,8 +30,24 @@
     <priority>0.3</priority>
   </url>
   <url>
+    <loc>https://dconsult.me/qa/</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dconsult.me/qa/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://dconsult.me/qa/he.html"/>
+  </url>
+  <url>
+    <loc>https://dconsult.me/qa/he.html</loc>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dconsult.me/qa/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://dconsult.me/qa/he.html"/>
+  </url>
+  <url>
     <loc>https://dconsult.me/about/itai-gal.html</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dconsult.me/about/itai-gal.html"/>
@@ -29,7 +55,7 @@
   </url>
   <url>
     <loc>https://dconsult.me/about/itai-gal-he.html</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://dconsult.me/about/itai-gal.html"/>

@@ -12,6 +12,7 @@
     "nav.services": "שירותים",
     "nav.platform": "הפלטפורמה",
     "nav.blog": "תובנות",
+    "nav.qa": "שאלות ותשובות",
     "nav.jobs": "דרושים",
     "nav.approach": "הגישה",
     "nav.results": "תוצאות",
@@ -144,6 +145,11 @@
   var EN = {};          // captured from DOM
   var nodes = [];       // [{el, key}]
   var lang = "en";
+  /* Each language has its own URL: / (data-page-lang="en") and /he/
+     (data-page-lang="he", built by blog/build.py with the HE strings above
+     already in the markup). The toggle moves between the two URLs. */
+  var PAGE_LANG = document.documentElement.getAttribute("data-page-lang") || "";
+  var BASE = PAGE_LANG === "he" ? "../" : "";
 
   function captureEN() {
     nodes = [].slice.call(document.querySelectorAll("[data-i18n]"));
@@ -170,7 +176,7 @@
       if (em) em.setAttribute("placeholder", lang === "he" ? HE["sub.label"] : (EN["sub.label"] || ""));
     });
     [].slice.call(document.querySelectorAll(".js-jobs")).forEach(function (a) {
-      a.setAttribute("href", lang === "he" ? "jobs/analyst/" : "jobs/analyst/en.html");
+      a.setAttribute("href", BASE + (lang === "he" ? "jobs/analyst/" : "jobs/analyst/en.html"));
     });
     var html = document.documentElement;
     html.setAttribute("lang", lang);
@@ -183,18 +189,31 @@
 
   /* ---------- boot ---------- */
   document.addEventListener("DOMContentLoaded", function () {
-    captureEN();
     var saved = "en";
     try { saved = localStorage.getItem("dc_lang") || "en"; } catch (e) {}
     var qp = new URLSearchParams(location.search).get("lang");
-    if (qp === "he" || qp === "en") saved = qp;
-    apply(saved);
+    if (PAGE_LANG === "he") {
+      apply("he");                    /* already Hebrew in the markup: nothing to swap */
+    } else if (PAGE_LANG === "en" && (qp === "he" || (!qp && saved === "he"))) {
+      location.replace("he/" + location.hash);   /* old ?lang=he links and a saved choice */
+      return;
+    } else {
+      captureEN();
+      if (qp === "he" || qp === "en") saved = qp;
+      apply(PAGE_LANG === "en" ? "en" : saved);
+    }
 
     var yr = document.getElementById("year");
     if (yr) yr.textContent = new Date().getFullYear();
 
     /* language toggle */
     document.getElementById("langToggle").addEventListener("click", function () {
+      if (PAGE_LANG) {
+        var to = PAGE_LANG === "he" ? "en" : "he";
+        try { localStorage.setItem("dc_lang", to); } catch (e) {}
+        location.href = (PAGE_LANG === "he" ? "../" : "he/") + location.hash;
+        return;
+      }
       apply(lang === "en" ? "he" : "en");
     });
 

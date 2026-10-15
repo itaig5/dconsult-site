@@ -182,8 +182,9 @@
        rewritten; ../privacy.html, ../jobs/ and ../about/ keep their paths. */
     [].forEach.call(document.querySelectorAll('a[href^="../"]'), function (a) {
       var h = a.getAttribute('href');
-      var m = h.match(/^\.\.\/(\?lang=he)?(#.*)?$/);
-      if (m) { a.setAttribute('href', '../' + (he ? '?lang=he' : '') + (m[2] || '')); return; }
+      var m = h.match(/^\.\.\/(\?lang=he|he\/)?(#.*)?$/);
+      if (m) { a.setAttribute('href', '../' + (he ? 'he/' : '') + (m[2] || '')); return; }
+      if (h === '../qa/' || h === '../qa/he.html') { a.setAttribute('href', he ? '../qa/he.html' : '../qa/'); return; }
       if (h.indexOf('../jobs/analyst/') === 0) a.setAttribute('href', he ? '../jobs/analyst/' : '../jobs/analyst/en.html');
     });
     [].forEach.call(document.querySelectorAll('a.js-privacy'), function (a) {
@@ -218,6 +219,7 @@
  ],
  "publisher": {
   "@type": "Organization",
+  "@id": "https://dconsult.me/#org",
   "name": "D Consulting",
   "url": "https://dconsult.me"
  },
@@ -264,6 +266,7 @@
       <a href="../#services">Services</a>
       <a href="../#platform">Platform</a>
       <a href="./">Insights</a>
+      <a href="../qa/">Q&amp;A</a>
       <a href="../jobs/analyst/en.html">Careers</a>
       <a href="../#contact">Contact</a>
     </nav>

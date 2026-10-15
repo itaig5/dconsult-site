@@ -31,3 +31,7 @@ exclude:
   - serve.js
   - blog/build.py
   - blog/posts
+  # the Q&A sources (blog/build.py renders qa/index.html and qa/he.html from them);
+  # without this Jekyll would publish each as a second, default-theme copy of the Q&A
+  - qa/qa-en.md
+  - qa/qa-he.md

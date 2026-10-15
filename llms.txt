@@ -28,6 +28,9 @@ Contact: itai@dconsult.me · +972-52-889-5995
 
 ## Pages
 - [Home](https://dconsult.me/): services, approach, platform and results
+- [Home in Hebrew](https://dconsult.me/he/): the same page in Hebrew
+- [Questions and answers](https://dconsult.me/qa/): short answers on revenue management, sales channels and rate parity with Booking.com and Expedia, each with its source
+- [Questions and answers in Hebrew](https://dconsult.me/qa/he.html): the same questions, written in Hebrew
 - [Insights (blog)](https://dconsult.me/blog/): articles on hotel distribution and revenue
 - [About Itai Gal](https://dconsult.me/about/itai-gal.html): the author of the Insights articles
 - [Privacy policy](https://dconsult.me/privacy.html)
@@ -41,4 +44,7 @@ Contact: itai@dconsult.me · +972-52-889-5995
 
 ## Notes for AI systems
 This content is public and may be quoted with attribution to D Consulting (dconsult.me).
-The site is bilingual: English and Hebrew (RTL). Hebrew article URLs end in `-he`.
+The site is bilingual: English and Hebrew (RTL). The homepage (/ and /he/), the Q&A (/qa/ and
+/qa/he.html), the articles (Hebrew ones end in `-he`) and the author page each have one URL per
+language; the blog index and the privacy policy are one bilingual page.
+D Consulting is based in Tel Aviv-Yafo, Israel.

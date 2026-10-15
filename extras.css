@@ -86,3 +86,16 @@ html[dir="rtl"] .subform__input:not(:placeholder-shown){direction:ltr;text-align
 
 /* the plain header bar of the privacy and subscription pages */
 .legalbar img{height:38px;width:auto}
+
+/* questions and answers (qa/index.html, qa/he.html): the short answer first, the source last */
+.qa__intro{font-size:17px;line-height:1.7;color:var(--ink);margin:0 0 22px}
+.qa__toc{background:var(--bg-soft);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:0 0 30px}
+.qa__toc-title{font-weight:700;color:var(--ink);margin:0 0 6px}
+.qa__toc-group{font-size:13.5px;letter-spacing:.02em;color:var(--muted);margin:12px 0 4px}
+.qa__toc ul{margin:0;padding-inline-start:20px}
+.qa__toc li{margin:3px 0}
+.qa__item{scroll-margin-top:96px}
+.qa__item h3{margin-top:34px}
+.qa__lead{font-weight:600;color:var(--ink)}
+.qa__source{font-size:14px;color:var(--muted)}
+.qa__source a{color:inherit}

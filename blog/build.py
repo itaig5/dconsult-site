@@ -89,6 +89,24 @@ EMAIL = "itai@dconsult.me"
 LINKEDIN = "https://www.linkedin.com/in/itai-gal/"
 PERSON_ID = f"{SITE}/#itai-gal"
 AUTHOR_PAGE = {"en": "about/itai-gal.html", "he": "about/itai-gal-he.html"}
+# One identity for the business across every page's JSON-LD: the homepage's
+# Organization carries this @id, and every publisher / worksFor points at it.
+ORG_ID = f"{SITE}/#org"
+
+# The Hebrew homepage has its own URL (he/index.html), generated from the
+# English ../index.html and the HE strings in ../script.js, so the two pages
+# can never drift apart in structure and the Hebrew text has one source.
+HOME_HE_OUT = os.path.join("..", "he", "index.html")
+HOME_URL = {"en": f"{SITE}/", "he": f"{SITE}/he/"}
+HOME_HE_TITLE = "ניהול תשואה וניהול ערוצי מכירה למלונות ולנכסי אירוח | D Consulting"
+HOME_HE_DESC = ("חברת ייעוץ בניהול תשואה, בניהול ערוצי מכירה ובטכנולוגיית תיירות, "
+                "שמלווה מלונות ונכסי אירוח בישראל ובאירופה.")
+
+# Questions and answers: one page per language, written separately in each
+# (qa/qa-<lang>.md), the same question ids in the same order in both.
+QA_SRC = {"en": os.path.join("..", "qa", "qa-en.md"), "he": os.path.join("..", "qa", "qa-he.md")}
+QA_OUT = {"en": os.path.join("..", "qa", "index.html"), "he": os.path.join("..", "qa", "he.html")}
+QA_URL = {"en": f"{SITE}/qa/", "he": f"{SITE}/qa/he.html"}
 # The author block, the author page and the Person JSON-LD all describe Itai.
 # A post by anyone else would get his photo and bio, so it is refused instead.
 KNOWN_AUTHORS = ("Itai Gal", "איתי גל")
@@ -126,7 +144,8 @@ UI = {
         "published": "Published ", "updated": "Updated ",
         "n_about": "About", "n_services": "Services", "n_platform": "Platform",
         "n_approach": "Approach", "n_insights": "Insights", "n_jobs": "Careers", "n_contact": "Contact",
-        "n_cta": "Let's talk", "other": "עברית",
+        "n_cta": "Let's talk", "other": "עברית", "n_qa": "Q&A",
+        "qa_updated": "Updated ", "qa_toc": "Questions on this page",
         # the fixed asks block (P2-16, P2-13, P2-8; playbook 7)
         "asks_h": "Want to check this against your property?",
         "asks_lead": "A free 20-minute introductory conversation about this post's topic and your property.",
@@ -172,7 +191,8 @@ UI = {
         "published": "פורסם ב-", "updated": "עודכן ב-",
         "n_about": "אודות", "n_services": "שירותים", "n_platform": "הפלטפורמה",
         "n_approach": "הגישה", "n_insights": "תובנות", "n_jobs": "דרושים", "n_contact": "צור קשר",
-        "n_cta": "דברו איתנו", "other": "English",
+        "n_cta": "דברו איתנו", "other": "English", "n_qa": "שאלות ותשובות",
+        "qa_updated": "עודכן ב-", "qa_toc": "השאלות בדף",
         "asks_h": "רוצים לבדוק את זה בנכס שלכם?",
         "asks_lead": "שיחת היכרות של 20 דקות, ללא עלות, על נושא הפוסט ועל הנכס שלכם.",
         "btn_wa": "שלחו לי הודעה בוואטסאפ",
@@ -361,7 +381,7 @@ def read_posts():
 
 
 def head(title, desc, lang, canonical, image="", alts=None, switch=None,
-         hreflang_note=None, image_alt="", body_attrs=""):
+         hreflang_note=None, image_alt="", body_attrs="", insights_href="./", crumb=None):
     rtl = ' dir="rtl"' if lang == "he" else ' dir="ltr"'
     og_img = f"{SITE}/{image}" if image else f"{SITE}/assets/og.jpg"
     og_alt = (f'\n<meta property="og:image:alt" content="{html.escape(image_alt)}">'
@@ -373,8 +393,9 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
         f'aria-label="Switch language">{html.escape(u["other"])}</a>'
         if switch else ""
     )
-    # keep the visitor's language when they head back to the main site
-    home = "../?lang=he" if lang == "he" else "../"
+    # keep the visitor's language when they head back to the main site: the
+    # Hebrew homepage has its own URL now (he/), so no ?lang= hop
+    home = "../he/" if lang == "he" else "../"
     jobs = "../jobs/analyst/" if lang == "he" else "../jobs/analyst/en.html"
 
     def _nl(href, key, cls=""):
@@ -387,12 +408,15 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
         _nl(f"{home}#services", "n_services"),
         _nl(f"{home}#platform", "n_platform"),
         _nl(f"{home}#approach", "n_approach"),
-        _nl("./", "n_insights", "active"),
+        _nl(insights_href, "n_insights", "active" if insights_href == "./" else ""),
         _nl(jobs, "n_jobs"),
         _nl(f"{home}#contact", "n_contact"),
     ])
     cta = _nl(f"{home}#contact", "n_cta", "btn btn--sm btn--primary")
 
+    crumb_html = (f'<a href="{crumb[0]}">{html.escape(crumb[1])}</a>' if crumb else
+                  f'<a href="./" data-en="{html.escape(UI["en"]["n_insights"])}" '
+                  f'data-he="{html.escape(UI["he"]["n_insights"])}">{html.escape(u["n_insights"])}</a>')
     if alts and hreflang_note:
         raise ValueError("head(): pass alts OR hreflang_note, not both: "
                          "the note would be dropped silently.")
@@ -455,7 +479,7 @@ def head(title, desc, lang, canonical, image="", alts=None, switch=None,
   </div>
 </header>
 
-<p class="crumbs"><a href="{home}">D Consulting</a> <span>/</span> <a href="./" data-en="{html.escape(UI['en']['n_insights'])}" data-he="{html.escape(UI['he']['n_insights'])}">{html.escape(u['n_insights'])}</a></p>
+<p class="crumbs"><a href="{home}">D Consulting</a> <span>/</span> {crumb_html}</p>
 """
 
 
@@ -492,9 +516,11 @@ def consent_banner(lang, both=False):
 """
 
 
-def foot(lang, both=False):
+def foot(lang, both=False, insights_href="./"):
     u = UI[lang]
     priv = "../privacy.html?lang=he" if lang == "he" else "../privacy.html"
+    home = "../he/" if lang == "he" else "../"
+    qa = "../qa/he.html" if lang == "he" else "../qa/"
     return f"""<footer class="footer">
   <div class="container footer__inner">
     <div class="footer__brand">
@@ -502,12 +528,13 @@ def foot(lang, both=False):
       <p class="footer__tag">Developing innovative strategies &middot; Achieving success</p>
     </div>
     <nav class="footer__links" aria-label="Footer">
-      <a href="../#about">{html.escape(u['n_about'])}</a>
-      <a href="../#services">{html.escape(u['n_services'])}</a>
-      <a href="../#platform">{html.escape(u['n_platform'])}</a>
-      <a href="./">{html.escape(u['n_insights'])}</a>
+      <a href="{home}#about">{html.escape(u['n_about'])}</a>
+      <a href="{home}#services">{html.escape(u['n_services'])}</a>
+      <a href="{home}#platform">{html.escape(u['n_platform'])}</a>
+      <a href="{insights_href}">{html.escape(u['n_insights'])}</a>
+      <a href="{qa}">{html.escape(u['n_qa'])}</a>
       <a href="{'../jobs/analyst/' if lang == 'he' else '../jobs/analyst/en.html'}">{html.escape(u['n_jobs'])}</a>
-      <a href="../#contact">{html.escape(u['n_contact'])}</a>
+      <a href="{home}#contact">{html.escape(u['n_contact'])}</a>
     </nav>
   </div>
   <div class="container footer__bottom">
@@ -539,6 +566,7 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 
 def write(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)     # he/ and qa/ may be new
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
@@ -639,10 +667,11 @@ def build_article(p, alts=None):
             "jobTitle": "Founder & CEO",
             "url": f"{SITE}/{AUTHOR_PAGE[lang]}",
             "sameAs": [LINKEDIN],
-            "worksFor": {"@type": "Organization", "name": "D Consulting", "url": SITE},
+            "worksFor": {"@type": "Organization", "@id": ORG_ID, "name": "D Consulting", "url": SITE},
         },
         "publisher": {
             "@type": "Organization",
+            "@id": ORG_ID,
             "name": "D Consulting",
             "url": SITE,
             "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/icon-512.png"},
@@ -728,7 +757,7 @@ def build_index(posts):
         "description": UI["en"]["sub"],
         "url": f"{SITE}/blog/",
         "inLanguage": ["en", "he"],
-        "publisher": {"@type": "Organization", "name": "D Consulting", "url": SITE},
+        "publisher": {"@type": "Organization", "@id": ORG_ID, "name": "D Consulting", "url": SITE},
         "blogPost": [{
             "@type": "BlogPosting",
             "headline": p["title"],
@@ -771,8 +800,9 @@ def build_index(posts):
        rewritten; ../privacy.html, ../jobs/ and ../about/ keep their paths. */
     [].forEach.call(document.querySelectorAll('a[href^="../"]'), function (a) {{
       var h = a.getAttribute('href');
-      var m = h.match(/^\\.\\.\\/(\\?lang=he)?(#.*)?$/);
-      if (m) {{ a.setAttribute('href', '../' + (he ? '?lang=he' : '') + (m[2] || '')); return; }}
+      var m = h.match(/^\\.\\.\\/(\\?lang=he|he\\/)?(#.*)?$/);
+      if (m) {{ a.setAttribute('href', '../' + (he ? 'he/' : '') + (m[2] || '')); return; }}
+      if (h === '../qa/' || h === '../qa/he.html') {{ a.setAttribute('href', he ? '../qa/he.html' : '../qa/'); return; }}
       if (h.indexOf('../jobs/analyst/') === 0) a.setAttribute('href', he ? '../jobs/analyst/' : '../jobs/analyst/en.html');
     }});
     [].forEach.call(document.querySelectorAll('a.js-privacy'), function (a) {{
@@ -913,6 +943,218 @@ def lastmod_generated(rel, content):
     return _commit_date(rel)
 
 
+# ---------------------------------------------------------------------------
+# Questions and answers (qa/qa-<lang>.md -> qa/index.html, qa/he.html)
+# ---------------------------------------------------------------------------
+QA_Q = re.compile(r"^## \{#([a-z0-9-]+)\} (.+?)\s*$")
+QA_SOURCE = {"en": "Source:", "he": "מקור:"}
+
+
+def check_qa_excluded():
+    """Every Q&A source must be in _config.yml's exclude list, or GitHub Pages' Jekyll
+    renders it as a duplicate, default-theme copy of the Q&A page (the same failure
+    blog/posts/*.md had before a4bbcea)."""
+    cfg_path = os.path.join(HERE, "..", "_config.yml")
+    cfg = open(cfg_path, encoding="utf-8").read() if os.path.exists(cfg_path) else ""
+    excluded = set(re.findall(r"^\s*-\s*(\S+)\s*$", cfg, re.M))
+    for rel in QA_SRC.values():
+        src = os.path.normpath(os.path.join("blog", rel)).replace(os.sep, "/")
+        if os.path.exists(os.path.join(HERE, rel)) and src not in excluded:
+            sys.exit(f"FAIL: {src} is not in _config.yml's exclude list; Jekyll would publish it as a duplicate page.")
+
+
+def read_qa(lang):
+    """Parse one language's Q&A source. Fails the build on anything a reader or
+    an answer engine would get wrong: a question with no answer or no source
+    line, a repeated id, a dash the site does not use."""
+    path = os.path.join(HERE, QA_SRC[lang])
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as fh:
+        meta, body = parse_front_matter(fh.read())
+    for k in ("title", "description", "updated", "intro"):
+        if not meta.get(k):
+            sys.exit(f"FAIL: {QA_SRC[lang]} has no '{k}' in its front matter. Nothing was written.")
+    if not valid_date(meta["updated"], QA_SRC[lang], "updated"):
+        sys.exit(f"FAIL: {QA_SRC[lang]}: 'updated' must be a real YYYY-MM-DD date. Nothing was written.")
+    groups, cur_group, cur = [], None, None
+    for line in body.splitlines():
+        m = QA_Q.match(line)
+        if line.startswith("# "):
+            cur_group = {"title": line[2:].strip(), "items": []}
+            groups.append(cur_group)
+            cur = None
+        elif m:
+            if cur_group is None:
+                sys.exit(f"FAIL: {QA_SRC[lang]}: question '{m.group(2)}' sits before any '# ' group.")
+            cur = {"id": m.group(1), "q": m.group(2).strip(), "md": []}
+            cur_group["items"].append(cur)
+        elif line.startswith("## "):
+            sys.exit(f"FAIL: {QA_SRC[lang]}: '{line}' has no {{#id}}. Every question needs a stable id.")
+        elif cur is not None:
+            cur["md"].append(line)
+        elif line.strip():
+            sys.exit(f"FAIL: {QA_SRC[lang]}: text outside a question: '{line[:60]}'.")
+    for k in ("title", "description", "intro"):
+        if re.search("[\u2013\u2014]", meta[k]):
+            sys.exit(f"FAIL: {QA_SRC[lang]}: an en or em dash in '{k}'. The site uses '-' only.")
+    for g in groups:
+        if re.search("[\u2013\u2014]", g["title"]):
+            sys.exit(f"FAIL: {QA_SRC[lang]}: an en or em dash in the group '{g['title']}'.")
+    items = [it for g in groups for it in g["items"]]
+    ids = [it["id"] for it in items]
+    if len(ids) != len(set(ids)):
+        sys.exit(f"FAIL: {QA_SRC[lang]}: a question id is used twice.")
+    for it in items:
+        text = "\n".join(it["md"]).strip()
+        if not text:
+            sys.exit(f"FAIL: {QA_SRC[lang]}#{it['id']}: no answer.")
+        if not any(l.strip() and not l.startswith(QA_SOURCE[lang]) for l in text.splitlines()):
+            sys.exit(f"FAIL: {QA_SRC[lang]}#{it['id']}: only a source line, no answer.")
+        if not any(l.startswith(QA_SOURCE[lang]) for l in text.splitlines()):
+            sys.exit(f"FAIL: {QA_SRC[lang]}#{it['id']}: no '{QA_SOURCE[lang]}' line. Every answer names its source.")
+        if re.search("[–—]", text + it["q"]):
+            sys.exit(f"FAIL: {QA_SRC[lang]}#{it['id']}: an en or em dash. The site uses '-' only.")
+        h = md_lib.markdown(text, extensions=["extra", "sane_lists"])
+        h = h.replace("<p>", '<p class="qa__lead">', 1)
+        h = h.replace(f"<p>{QA_SOURCE[lang]}", f'<p class="qa__source">{QA_SOURCE[lang]}')
+        it["html"] = h
+        plain = html.unescape(re.sub(r"<[^>]+>", " ", h))
+        it["plain"] = re.sub(r"\s+", " ", plain).strip()
+    return {"lang": lang, "meta": meta, "groups": groups, "ids": ids}
+
+
+def build_qa(qa, alts):
+    lang, meta = qa["lang"], qa["meta"]
+    u = UI[lang]
+    url = QA_URL[lang]
+    other = "he.html" if lang == "en" else "./"
+    toc, body, entities = [], [], []
+    for g in qa["groups"]:
+        toc.append(f'<p class="qa__toc-group">{html.escape(g["title"])}</p><ul>'
+                   + "".join(f'<li><a href="#{it["id"]}">{html.escape(it["q"])}</a></li>' for it in g["items"])
+                   + "</ul>")
+        body.append(f'<h2 class="qa__group">{html.escape(g["title"])}</h2>')
+        for it in g["items"]:
+            body.append(f'<section class="qa__item" id="{it["id"]}">\n<h3>{html.escape(it["q"])}</h3>\n{it["html"]}\n</section>')
+            entities.append({"@type": "Question", "name": it["q"], "url": f"{url}#{it['id']}",
+                             "acceptedAnswer": {"@type": "Answer", "text": it["plain"], "url": f"{url}#{it['id']}",
+                                                "author": {"@id": PERSON_ID}, "dateModified": meta["updated"]}})
+    doc = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "@id": f"{url}#faq",
+        "url": url,
+        "name": meta["title"],
+        "description": meta["description"],
+        "inLanguage": lang,
+        "dateModified": meta["updated"],
+        "author": {"@type": "Person", "@id": PERSON_ID, "name": "Itai Gal" if lang == "en" else "איתי גל",
+                   "url": f"{SITE}/{AUTHOR_PAGE[lang]}"},
+        "publisher": {"@type": "Organization", "@id": ORG_ID, "name": "D Consulting", "url": f"{SITE}/"},
+        "mainEntity": entities,
+    }
+    schema = ('<script type="application/ld+json">\n'
+              + json.dumps(doc, ensure_ascii=False, indent=1) + "\n</script>")
+    byline = (f'{html.escape(u["by"])} <a href="../{AUTHOR_PAGE[lang]}">'
+              f'{html.escape("Itai Gal" if lang == "en" else "איתי גל")}</a>')
+    return (
+        head(f"{meta['title']} | D Consulting", meta["description"], lang, url, alts=alts, switch=other,
+             body_attrs=' data-post="(qa)"', insights_href="../blog/", crumb=("./", u["n_qa"]))
+        + f"""<main class="post qa">
+  <div class="post__wrap">
+    <p class="post__meta">{html.escape(u['qa_updated'])}<time datetime="{meta['updated']}">{human_date(meta['updated'], lang)}</time> · {byline}</p>
+    <h1 class="post__title">{html.escape(meta['title'])}</h1>
+    <p class="qa__intro">{html.escape(meta['intro'])}</p>
+    <nav class="qa__toc" aria-label="{html.escape(u['qa_toc'])}">
+      <p class="qa__toc-title">{html.escape(u['qa_toc'])}</p>
+      {"".join(toc)}
+    </nav>
+    <article class="post__body qa__body">
+{chr(10).join(body)}
+    </article>
+    {author_block(lang)}
+  </div>
+</main>
+{schema}
+"""
+        + foot(lang, insights_href="../blog/")
+    )
+
+
+# ---------------------------------------------------------------------------
+# The Hebrew homepage (../index.html + HE strings of ../script.js -> ../he/index.html)
+# ---------------------------------------------------------------------------
+I18N_EL = re.compile(r'(<(?P<tag>[a-zA-Z0-9]+)\b[^>]*\bdata-i18n="(?P<key>[^"]+)"[^>]*>)(?P<inner>.*?)(</(?P=tag)>)', re.S)
+REL_ATTR = re.compile(r'\b(href|src|action)="(?!https?:|//|#|mailto:|tel:|data:|/|javascript:)([^"]*)"')
+
+
+def he_strings():
+    with open(os.path.join(HERE, "..", "script.js"), encoding="utf-8") as fh:
+        js = fh.read()
+    m = re.search(r"var HE = \{(.*?)\n  \};", js, re.S)
+    if not m:
+        sys.exit("FAIL: ../script.js has no 'var HE = { ... };' block; the Hebrew homepage cannot be built.")
+    pairs = re.findall(r'^\s*"([^"]+)"\s*:\s*("(?:[^"\\]|\\.)*")\s*,?\s*$', m.group(1), re.M)
+    return {k: json.loads(v) for k, v in pairs}
+
+
+def build_home_he():
+    with open(os.path.join(HERE, "..", "index.html"), encoding="utf-8") as fh:
+        src = fh.read()
+    he = he_strings()
+    missing = []
+
+    def swap(m):
+        key = m.group("key")
+        if key not in he:
+            missing.append(key)
+            return m.group(0)
+        if re.search(rf"<{m.group('tag')}\b", m.group("inner"), re.I):
+            sys.exit(f"FAIL: data-i18n='{key}' holds a nested <{m.group('tag')}>; the swap would cut it short.")
+        return m.group(1) + he[key] + m.group(5)
+
+    out = I18N_EL.sub(swap, src)
+    if missing:
+        sys.exit("FAIL: these homepage strings have no Hebrew in ../script.js: " + ", ".join(sorted(set(missing))))
+    if out.count("data-i18n=") != src.count("data-i18n="):
+        sys.exit("FAIL: the Hebrew homepage lost data-i18n elements in the swap.")
+    if 'data-page-lang="en"' not in out:
+        sys.exit('FAIL: ../index.html must carry <html ... data-page-lang="en">.')
+    out = out.replace('<html lang="en" dir="ltr" data-page-lang="en">', '<html lang="he" dir="rtl" data-page-lang="he">', 1)
+    out = re.sub(r"<title>.*?</title>", f"<title>{html.escape(HOME_HE_TITLE)}</title>", out, count=1, flags=re.S)
+    out = re.sub(r'<meta name="description" content="[^"]*">',
+                 f'<meta name="description" content="{html.escape(HOME_HE_DESC)}">', out, count=1)
+    out = re.sub(r'<meta property="og:title" content="[^"]*">',
+                 f'<meta property="og:title" content="{html.escape(HOME_HE_TITLE)}">', out, count=1)
+    out = re.sub(r'<meta property="og:description" content="[^"]*">',
+                 f'<meta property="og:description" content="{html.escape(HOME_HE_DESC)}">', out, count=1)
+    out = out.replace(f'<meta property="og:url" content="{SITE}/">', f'<meta property="og:url" content="{HOME_URL["he"]}">', 1)
+    out = out.replace(f'<link rel="canonical" href="{SITE}/">', f'<link rel="canonical" href="{HOME_URL["he"]}">', 1)
+    out = out.replace('<span class="langtoggle__opt is-active" data-lang="en">', '<span class="langtoggle__opt" data-lang="en">', 1)
+    out = out.replace('<span class="langtoggle__opt" data-lang="he">', '<span class="langtoggle__opt is-active" data-lang="he">', 1)
+    out = out.replace('href="jobs/analyst/en.html"', 'href="jobs/analyst/"')
+    out = out.replace('href="privacy.html"', 'href="privacy.html?lang=he"')
+    out = out.replace('href="qa/"', 'href="qa/he.html"')
+    # the subscription form records the language, the consent text's version and the page it was
+    # sent from; script.js corrects three of them at run time, but not "page", and not without JS
+    for name, val in (("lang", "he"), ("consent_version", "he-1"), ("page", HOME_URL["he"])):
+        out, n = re.subn(rf'(<input type="hidden" name="{name}" value=")[^"]*(")', rf"\g<1>{val}\g<2>", out)
+        if not n:
+            sys.exit(f"FAIL: the subscription form on ../index.html has no hidden '{name}' field; /he/ would record the wrong value.")
+    out, n = re.subn(r'(<input[^>]*id="sf-home-email"[^>]*placeholder=")[^"]*(")', rf"\g<1>{html.escape(he['sub.label'])}\g<2>", out)
+    if not n:
+        sys.exit("FAIL: the subscription form's email field changed shape; the Hebrew placeholder was not set.")
+    if "srcset=" in out:
+        sys.exit("FAIL: ../index.html now uses srcset, which this generator does not rewrite to ../ for /he/.")
+    out = REL_ATTR.sub(lambda m: f'{m.group(1)}="../{m.group(2)}"', out)
+    for must in (f'<link rel="canonical" href="{HOME_URL["he"]}">', f'<meta property="og:url" content="{HOME_URL["he"]}">',
+                 '<span class="langtoggle__opt is-active" data-lang="he">', 'data-page-lang="he"', "<title>ניהול תשואה וניהול ערוצי מכירה"):
+        if must not in out:
+            sys.exit(f"FAIL: the Hebrew homepage is missing {must!r}; ../index.html changed shape.")
+    return out
+
+
 def _author_pages():
     """The author pages that exist on disk, as [(lang, url, rel-from-blog)]."""
     out = []
@@ -923,14 +1165,23 @@ def _author_pages():
     return out
 
 
-def build_sitemap(posts, by_base, blog_index_html):
+def build_sitemap(posts, by_base, blog_index_html, home_he_html=None, qa_pages=None):
     """Whole-site sitemap. Regenerated on every build so new posts are never missed."""
+    home_alts = [("en", HOME_URL["en"]), ("he", HOME_URL["he"])] if home_he_html else []
     rows = [
-        (f"{SITE}/", lastmod("../index.html"), "weekly", "1.0", []),
+        (f"{SITE}/", lastmod("../index.html"), "weekly", "1.0", home_alts),
         (f"{SITE}/blog/", lastmod_generated("index.html", blog_index_html),
          "weekly", "0.9", []),
         (f"{SITE}/privacy.html", lastmod("../privacy.html"), "yearly", "0.3", []),
     ]
+    if home_he_html:
+        rows.insert(1, (HOME_URL["he"], lastmod_generated(HOME_HE_OUT, home_he_html), "weekly", "1.0", home_alts))
+    qa_pages = qa_pages or {}
+    qa_alts = [(l, QA_URL[l]) for l in ("en", "he") if l in qa_pages]
+    for l in ("en", "he"):
+        if l in qa_pages:
+            rows.append((QA_URL[l], lastmod_generated(QA_OUT[l], qa_pages[l]), "monthly", "0.8",
+                         qa_alts if len(qa_alts) > 1 else []))
     # The author pages have one real URL per language, so their pair is valid
     # hreflang. A page that is not on disk is not listed: a sitemap row for a
     # 404 is worse than no row.
@@ -962,12 +1213,19 @@ def build_sitemap(posts, by_base, blog_index_html):
             f"{body}</urlset>\n")
 
 
-def build_llms(posts):
+def build_llms(posts, qa=None):
     """/llms.txt: proposed convention giving AI systems a clean map of the site."""
     arts = "\n".join(
         f"- [{p['title']}]({SITE}/blog/{p['slug']}.html): {p['excerpt']}"
         for p in posts
     ) or "- (no articles yet)"
+    qa = qa or {}
+    qa_lines = ""
+    if "en" in qa:
+        qa_lines += (f"\n- [Questions and answers]({SITE}/qa/): short answers on revenue management, "
+                     "sales channels and rate parity with Booking.com and Expedia, each with its source")
+    if "he" in qa:
+        qa_lines += f"\n- [Questions and answers in Hebrew]({SITE}/qa/he.html): the same questions, written in Hebrew"
     author = (f"\n- [About Itai Gal]({SITE}/{AUTHOR_PAGE['en']}): the author of the Insights articles"
               if any(l == "en" for l, _, _ in _author_pages()) else "")
     return f"""# D Consulting
@@ -1000,6 +1258,7 @@ Contact: itai@dconsult.me · +972-52-889-5995
 
 ## Pages
 - [Home]({SITE}/): services, approach, platform and results
+- [Home in Hebrew]({SITE}/he/): the same page in Hebrew{qa_lines}
 - [Insights (blog)]({SITE}/blog/): articles on hotel distribution and revenue{author}
 - [Privacy policy]({SITE}/privacy.html)
 - [RSS feed]({SITE}/blog/feed.xml)
@@ -1009,7 +1268,10 @@ Contact: itai@dconsult.me · +972-52-889-5995
 
 ## Notes for AI systems
 This content is public and may be quoted with attribution to D Consulting (dconsult.me).
-The site is bilingual: English and Hebrew (RTL). Hebrew article URLs end in `-he`.
+The site is bilingual: English and Hebrew (RTL). The homepage (/ and /he/), the Q&A (/qa/ and
+/qa/he.html), the articles (Hebrew ones end in `-he`) and the author page each have one URL per
+language; the blog index and the privacy policy are one bilingual page.
+D Consulting is based in Tel Aviv-Yafo, Israel.
 """
 
 
@@ -1126,8 +1388,19 @@ def main():
     blog_index = build_index(posts)
     out["index.html"] = blog_index
     out["feed.xml"] = build_feed(posts)
-    out[os.path.join("..", "sitemap.xml")] = build_sitemap(posts, by_base, blog_index)
-    out[os.path.join("..", "llms.txt")] = build_llms(posts)
+    check_qa_excluded()
+    home_he = build_home_he()
+    out[HOME_HE_OUT] = home_he
+    qa = {l: q for l in ("en", "he") for q in [read_qa(l)] if q}
+    if len(qa) == 2 and qa["en"]["ids"] != qa["he"]["ids"]:
+        sys.exit("FAIL: the English and Hebrew Q&A must have the same question ids in the same order:\n  en "
+                 + " ".join(qa["en"]["ids"]) + "\n  he " + " ".join(qa["he"]["ids"]))
+    qa_alts = [(l, QA_URL[l]) for l in ("en", "he") if l in qa]
+    qa_pages = {l: build_qa(q, qa_alts if len(qa_alts) > 1 else None) for l, q in qa.items()}
+    for l, page in qa_pages.items():
+        out[QA_OUT[l]] = page
+    out[os.path.join("..", "sitemap.xml")] = build_sitemap(posts, by_base, blog_index, home_he, qa_pages)
+    out[os.path.join("..", "llms.txt")] = build_llms(posts, qa)
 
     check_no_lang_hreflang(out)
     print("  ✓ no ?lang= hreflang cluster")
@@ -1136,8 +1409,9 @@ def main():
         write(os.path.join(HERE, rel), content)
     for p in posts:
         print(f"  → blog/{p['slug']}.html   [{p['lang']}] {p['title'][:52]}")
-    print("  → blog/index.html\n  → blog/feed.xml\n  → sitemap.xml (whole site)"
-          "\n  → llms.txt\nDone.")
+    print("  → blog/index.html\n  → blog/feed.xml\n  → he/index.html (Hebrew homepage)"
+          + "".join(f"\n  → {QA_OUT[l][3:]}  [{l}] {len(qa[l]['ids'])} questions" for l in qa)
+          + "\n  → sitemap.xml (whole site)\n  → llms.txt\nDone.")
 
 
 if __name__ == "__main__":
